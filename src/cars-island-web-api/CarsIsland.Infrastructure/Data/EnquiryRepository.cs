@@ -3,16 +3,15 @@ using CarsIsland.Core.Entities;
 using CarsIsland.Infrastructure.Configuration.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CarsIsland.Infrastructure.Data
-{
-    public class EnquiryRepository : CosmosDbDataRepository<Enquiry>
-    {
-        public EnquiryRepository(ICosmosDbConfiguration cosmosDbConfiguration,
-                         CosmosClient client,
-                         ILogger<EnquiryRepository> log) : base(cosmosDbConfiguration, client, log)
-        {
-        }
+namespace CarsIsland.Infrastructure.Data;
 
-        public override string ContainerName => CosmosDbConfiguration.EnquiryContainerName;
+public class EnquiryRepository : CosmosDbDataRepository<Enquiry>
+{
+    public EnquiryRepository(ICosmosDbConfiguration cosmosDbConfiguration,
+        CosmosClient client,
+        ILogger<EnquiryRepository> log) : base(cosmosDbConfiguration, client, log)
+    {
     }
+
+    protected override string ContainerName => CosmosDbConfiguration.EnquiryContainerName;
 }

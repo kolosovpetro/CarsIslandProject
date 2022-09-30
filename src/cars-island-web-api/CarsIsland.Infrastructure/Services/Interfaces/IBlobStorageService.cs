@@ -1,15 +1,14 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace CarsIsland.Infrastructure.Services.Interfaces
+namespace CarsIsland.Infrastructure.Services.Interfaces;
+
+public interface IBlobStorageService
 {
-    public interface IBlobStorageService
-    {
-        Task DownloadBlobIfExistsAsync(Stream stream, string blobName);
-        Task<string> UploadBlobAsync(Stream stream, string blobName);
-        Task DeleteBlobIfExistsAsync(string blobName);
-        Task<bool> DoesBlobExistAsync(string blobName);
-        Task<string> GetBlobUrl(string blobName);
-        string GenerateSasTokenForContainer();
-    }
+    Task DownloadBlobIfExistsAsync(Stream stream, string blobName);
+    Task<string> UploadBlobAsync(Stream stream, string blobName);
+    Task DeleteBlobIfExistsAsync(string blobName);
+    Task<bool> DoesBlobExistAsync(string blobName);
+    Task<string> GetBlobUrl(string blobName);
+    string GenerateSasTokenForContainer();
 }

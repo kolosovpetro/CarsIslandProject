@@ -7,154 +7,153 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CarsIsland.Infrastructure.Data
+namespace CarsIsland.Infrastructure.Data;
+
+public abstract class CosmosDbDataRepository<T> : IDataRepository<T> where T : BaseEntity
 {
-    public abstract class CosmosDbDataRepository<T> : IDataRepository<T> where T : BaseEntity
+    protected readonly ICosmosDbConfiguration CosmosDbConfiguration;
+    private readonly CosmosClient _client;
+    private readonly ILogger<CosmosDbDataRepository<T>> _log;
+
+    protected abstract string ContainerName { get; }
+
+    protected CosmosDbDataRepository(ICosmosDbConfiguration cosmosDbConfiguration,
+        CosmosClient client,
+        ILogger<CosmosDbDataRepository<T>> log)
     {
-        protected readonly ICosmosDbConfiguration CosmosDbConfiguration;
-        protected readonly CosmosClient Client;
-        protected readonly ILogger<CosmosDbDataRepository<T>> Log;
+        CosmosDbConfiguration = cosmosDbConfiguration ?? throw new ArgumentNullException(nameof(cosmosDbConfiguration));
+        _client = client ?? throw new ArgumentNullException(nameof(client));
+        _log = log ?? throw new ArgumentNullException(nameof(log));
+    }
 
-        public abstract string ContainerName { get; }
-
-        public CosmosDbDataRepository(ICosmosDbConfiguration cosmosDbConfiguration,
-            CosmosClient client,
-            ILogger<CosmosDbDataRepository<T>> log)
+    public async Task<T> AddAsync(T newEntity)
+    {
+        try
         {
-            CosmosDbConfiguration = cosmosDbConfiguration ?? throw new ArgumentNullException(nameof(cosmosDbConfiguration));
-            Client = client ?? throw new ArgumentNullException(nameof(client));
-            Log = log ?? throw new ArgumentNullException(nameof(log));
+            var container = GetContainer();
+            var createResponse = await container.CreateItemAsync(newEntity);
+            return createResponse.Value;
         }
-
-        public async Task<T> AddAsync(T newEntity)
+        catch (CosmosException ex)
         {
-            try
-            {
-                var container = GetContainer();
-                var createResponse = await container.CreateItemAsync(newEntity);
-                return createResponse.Value;
-            }
-            catch (CosmosException ex)
-            {
-                Log.LogError(
-                    $"New entity with ID: {newEntity.Id} was not added successfully - error details: {ex.Message}");
+            _log.LogError(
+                $"New entity with ID: {newEntity.Id} was not added successfully - error details: {ex.Message}");
 
-                if (ex.ErrorCode != "404")
-                {
-                    throw;
-                }
-
-                return null;
+            if (ex.ErrorCode != "404")
+            {
+                throw;
             }
+
+            return null;
         }
+    }
 
-        public async Task DeleteAsync(string entityId)
+    public async Task DeleteAsync(string entityId)
+    {
+        try
         {
-            try
-            {
-                var container = GetContainer();
+            var container = GetContainer();
 
-                await container.DeleteItemAsync<T>(entityId, new PartitionKey(entityId));
-            }
-            catch (CosmosException ex)
-            {
-                Log.LogError($"Entity with ID: {entityId} was not removed successfully - error details: {ex.Message}");
+            await container.DeleteItemAsync<T>(entityId, new PartitionKey(entityId));
+        }
+        catch (CosmosException ex)
+        {
+            _log.LogError($"Entity with ID: {entityId} was not removed successfully - error details: {ex.Message}");
 
-                if (ex.ErrorCode != "404")
-                {
-                    throw;
-                }
+            if (ex.ErrorCode != "404")
+            {
+                throw;
             }
         }
+    }
 
-        public async Task<T> GetAsync(string entityId)
+    public async Task<T> GetAsync(string entityId)
+    {
+        try
         {
-            try
-            {
-                var container = GetContainer();
+            var container = GetContainer();
 
-                var entityResult = await container.ReadItemAsync<T>(entityId, new PartitionKey(entityId));
-                return entityResult.Value;
-            }
-            catch (CosmosException ex)
-            {
-                Log.LogError(
-                    $"Entity with ID: {entityId} was not retrieved successfully - error details: {ex.Message}");
-
-                if (ex.ErrorCode != "404")
-                {
-                    throw;
-                }
-
-                return null;
-            }
+            var entityResult = await container.ReadItemAsync<T>(entityId, new PartitionKey(entityId));
+            return entityResult.Value;
         }
-
-        public async Task<T> UpdateAsync(T entity)
+        catch (CosmosException ex)
         {
-            try
+            _log.LogError(
+                $@"Entity with ID: {entityId} was not retrieved successfully - error details: {ex.Message}");
+
+            if (ex.ErrorCode != "404")
             {
-                var container = GetContainer();
-
-                var entityResult = await container
-                    .ReadItemAsync<BaseEntity>(entity.Id.ToString(), new PartitionKey(entity.Id.ToString()));
-
-                if (entityResult != null)
-                {
-                    await container
-                        .ReplaceItemAsync(entity, entity.Id.ToString(), new PartitionKey(entity.Id.ToString()));
-                }
-
-                return entity;
+                throw;
             }
-            catch (CosmosException ex)
-            {
-                Log.LogError(
-                    $"Entity with ID: {entity.Id} was not updated successfully - error details: {ex.Message}");
 
-                if (ex.ErrorCode != "404")
-                {
-                    throw;
-                }
-
-                return null;
-            }
+            return null;
         }
+    }
 
-        public async Task<IReadOnlyList<T>> GetAllAsync()
+    public async Task<T> UpdateAsync(T entity)
+    {
+        try
         {
-            try
+            var container = GetContainer();
+
+            var entityResult = await container
+                .ReadItemAsync<BaseEntity>(entity.Id, new PartitionKey(entity.Id));
+
+            if (entityResult != null)
             {
-                var container = GetContainer();
-                var queryResultSetIterator = container.GetItemQueryIterator<T>();
-                var entities = new List<T>();
-
-                await foreach (var entity in queryResultSetIterator)
-                {
-                    entities.Add(entity);
-                }
-
-                return entities;
+                await container
+                    .ReplaceItemAsync(entity, entity.Id, new PartitionKey(entity.Id));
             }
-            catch (CosmosException ex)
-            {
-                Log.LogError($"Entities was not retrieved successfully - error details: {ex.Message}");
 
-                if (ex.ErrorCode != "404")
-                {
-                    throw;
-                }
-
-                return null;
-            }
+            return entity;
         }
-
-
-        private CosmosContainer GetContainer()
+        catch (CosmosException ex)
         {
-            var database = Client.GetDatabase(CosmosDbConfiguration.DatabaseName);
-            var container = database.GetContainer(ContainerName);
-            return container;
+            _log.LogError(
+                $"Entity with ID: {entity.Id} was not updated successfully - error details: {ex.Message}");
+
+            if (ex.ErrorCode != "404")
+            {
+                throw;
+            }
+
+            return null;
         }
+    }
+
+    public async Task<IReadOnlyList<T>> GetAllAsync()
+    {
+        try
+        {
+            var container = GetContainer();
+            var queryResultSetIterator = container.GetItemQueryIterator<T>();
+            var entities = new List<T>();
+
+            await foreach (var entity in queryResultSetIterator)
+            {
+                entities.Add(entity);
+            }
+
+            return entities;
+        }
+        catch (CosmosException ex)
+        {
+            _log.LogError($"Entities was not retrieved successfully - error details: {ex.Message}");
+
+            if (ex.ErrorCode != "404")
+            {
+                throw;
+            }
+
+            return null;
+        }
+    }
+
+
+    private CosmosContainer GetContainer()
+    {
+        var database = _client.GetDatabase(CosmosDbConfiguration.DatabaseName);
+        var container = database.GetContainer(ContainerName);
+        return container;
     }
 }

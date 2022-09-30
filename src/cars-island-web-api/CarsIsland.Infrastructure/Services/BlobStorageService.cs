@@ -10,146 +10,153 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace CarsIsland.Infrastructure.Services
+namespace CarsIsland.Infrastructure.Services;
+
+public class BlobStorageService : IBlobStorageService
 {
-    public class BlobStorageService : IBlobStorageService
+    private readonly IBlobStorageServiceConfiguration _blobStorageServiceConfiguration;
+    private readonly BlobServiceClient _blobServiceClient;
+    private readonly ILogger<BlobStorageService> _log;
+
+    public BlobStorageService(
+        IBlobStorageServiceConfiguration blobStorageServiceConfiguration,
+        BlobServiceClient blobServiceClient,
+        ILogger<BlobStorageService> log)
     {
-        private readonly IBlobStorageServiceConfiguration _blobStorageServiceConfiguration;
-        private readonly BlobServiceClient _blobServiceClient;
-        private readonly ILogger<BlobStorageService> _log;
+        _blobStorageServiceConfiguration =
+            blobStorageServiceConfiguration ?? throw new ArgumentNullException(nameof(blobStorageServiceConfiguration));
 
-        public BlobStorageService(IBlobStorageServiceConfiguration blobStorageServiceConfiguration,
-                              BlobServiceClient blobServiceClient,
-                              ILogger<BlobStorageService> log)
+        _blobServiceClient = blobServiceClient ?? throw new ArgumentNullException(nameof(blobServiceClient));
+
+        _log = log ?? throw new ArgumentNullException(nameof(log));
+    }
+
+    public async Task DeleteBlobIfExistsAsync(string blobName)
+    {
+        try
         {
-            _blobStorageServiceConfiguration = blobStorageServiceConfiguration
-                    ?? throw new ArgumentNullException(nameof(blobStorageServiceConfiguration));
-            _blobServiceClient = blobServiceClient
-                    ?? throw new ArgumentNullException(nameof(blobServiceClient));
-            _log = log
-                    ?? throw new ArgumentNullException(nameof(log));
+            var container = await GetBlobContainer();
+            var blockBlob = container.GetBlobClient(blobName);
+            await blockBlob.DeleteIfExistsAsync();
+        }
+        catch (RequestFailedException ex)
+        {
+            _log.LogError($"Document {blobName} was not deleted successfully - error details: {ex.Message}");
+            throw;
+        }
+    }
+
+    public async Task<bool> DoesBlobExistAsync(string blobName)
+    {
+        try
+        {
+            var container = await GetBlobContainer();
+            var blockBlob = container.GetBlobClient(blobName);
+            var doesBlobExist = await blockBlob.ExistsAsync();
+            return doesBlobExist.Value;
+        }
+        catch (RequestFailedException ex)
+        {
+            _log.LogError($"Document {blobName} existence cannot be verified - error details: {ex.Message}");
+            throw;
+        }
+    }
+
+    public async Task DownloadBlobIfExistsAsync(Stream stream, string blobName)
+    {
+        try
+        {
+            var container = await GetBlobContainer();
+            var blockBlob = container.GetBlobClient(blobName);
+
+            await blockBlob.DownloadToAsync(stream);
         }
 
-        public async Task DeleteBlobIfExistsAsync(string blobName)
+        catch (RequestFailedException ex)
         {
-            try
+            _log.LogError($"Cannot download document {blobName} - error details: {ex.Message}");
+            if (ex.ErrorCode != "404")
             {
-                var container = await GetBlobContainer();
-                var blockBlob = container.GetBlobClient(blobName);
-                await blockBlob.DeleteIfExistsAsync();
-            }
-            catch (RequestFailedException ex)
-            {
-                _log.LogError($"Document {blobName} was not deleted successfully - error details: {ex.Message}");
                 throw;
             }
         }
+    }
 
-        public async Task<bool> DoesBlobExistAsync(string blobName)
+    public async Task<string> GetBlobUrl(string blobName)
+    {
+        try
         {
-            try
-            {
-                var container = await GetBlobContainer();
-                var blockBlob = container.GetBlobClient(blobName);
-                var doesBlobExist = await blockBlob.ExistsAsync();
-                return doesBlobExist.Value;
-            }
-            catch (RequestFailedException ex)
-            {
-                _log.LogError($"Document {blobName} existence cannot be verified - error details: {ex.Message}");
-                throw;
-            }
+            var container = await GetBlobContainer();
+            var blob = container.GetBlobClient(blobName);
+
+            var blobUrl = blob.Uri.AbsoluteUri;
+            return blobUrl;
+        }
+        catch (RequestFailedException ex)
+        {
+            _log.LogError($"Url for document {blobName} was not found - error details: {ex.Message}");
+            throw;
+        }
+    }
+
+    public async Task<string> UploadBlobAsync(Stream stream, string blobName)
+    {
+        try
+        {
+            Debug.Assert(stream.CanSeek);
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            var container = await GetBlobContainer();
+
+            var blob = container.GetBlobClient(blobName);
+            await blob.UploadAsync(stream);
+            return blob.Uri.AbsoluteUri;
         }
 
-        public async Task DownloadBlobIfExistsAsync(Stream stream, string blobName)
+        catch (RequestFailedException ex)
         {
-            try
-            {
-                var container = await GetBlobContainer();
-                var blockBlob = container.GetBlobClient(blobName);
-
-                await blockBlob.DownloadToAsync(stream);
-
-            }
-
-            catch (RequestFailedException ex)
-            {
-                _log.LogError($"Cannot download document {blobName} - error details: {ex.Message}");
-                if (ex.ErrorCode != "404")
-                {
-                    throw;
-                }
-            }
+            _log.LogError($"Document {blobName} was not uploaded successfully - error details: {ex.Message}");
+            throw;
         }
+    }
 
-        public async Task<string> GetBlobUrl(string blobName)
+    private async Task<BlobContainerClient> GetBlobContainer()
+    {
+        try
         {
-            try
-            {
-                var container = await GetBlobContainer();
-                var blob = container.GetBlobClient(blobName);
+            var container = _blobServiceClient
+                .GetBlobContainerClient(_blobStorageServiceConfiguration.ContainerName);
 
-                string blobUrl = blob.Uri.AbsoluteUri;
-                return blobUrl;
-            }
-            catch (RequestFailedException ex)
-            {
-                _log.LogError($"Url for document {blobName} was not found - error details: {ex.Message}");
-                throw;
-            }
+            await container.CreateIfNotExistsAsync();
+
+            return container;
         }
-
-        public async Task<string> UploadBlobAsync(Stream stream, string blobName)
+        catch (RequestFailedException ex)
         {
-            try
-            {
-                Debug.Assert(stream.CanSeek);
-                stream.Seek(0, SeekOrigin.Begin);
-                var container = await GetBlobContainer();
-
-                BlobClient blob = container.GetBlobClient(blobName);
-                await blob.UploadAsync(stream);
-                return blob.Uri.AbsoluteUri;
-            }
-
-            catch (RequestFailedException ex)
-            {
-                _log.LogError($"Document {blobName} was not uploaded successfully - error details: {ex.Message}");
-                throw;
-            }
+            _log.LogError(
+                $"Cannot find blob container: {_blobStorageServiceConfiguration.ContainerName} - error details: {ex.Message}");
+            throw;
         }
+    }
 
-        private async Task<BlobContainerClient> GetBlobContainer()
+    public string GenerateSasTokenForContainer()
+    {
+        var builder = new BlobSasBuilder
         {
-            try
-            {
-                BlobContainerClient container = _blobServiceClient
-                                .GetBlobContainerClient(_blobStorageServiceConfiguration.ContainerName);
+            BlobContainerName = _blobStorageServiceConfiguration.ContainerName,
+            ContentType = "video/mp4"
+        };
 
-                await container.CreateIfNotExistsAsync();
+        builder.SetPermissions(BlobAccountSasPermissions.Read);
+        builder.StartsOn = DateTimeOffset.UtcNow;
+        builder.ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(90);
 
-                return container;
-            }
-            catch (RequestFailedException ex)
-            {
-                _log.LogError($"Cannot find blob container: {_blobStorageServiceConfiguration.ContainerName} - error details: {ex.Message}");
-                throw;
-            }
-        }
+        var sasToken = builder
+            .ToSasQueryParameters(new StorageSharedKeyCredential(_blobStorageServiceConfiguration.AccountName,
+                _blobStorageServiceConfiguration.Key))
+            .ToString();
 
-        public string GenerateSasTokenForContainer()
-        {
-            BlobSasBuilder builder = new BlobSasBuilder();
-            builder.BlobContainerName = _blobStorageServiceConfiguration.ContainerName;
-            builder.ContentType = "video/mp4";
-            builder.SetPermissions(BlobAccountSasPermissions.Read);
-            builder.StartsOn = DateTimeOffset.UtcNow;
-            builder.ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(90);
-            var sasToken = builder
-                        .ToSasQueryParameters(new StorageSharedKeyCredential(_blobStorageServiceConfiguration.AccountName,
-                                                                             _blobStorageServiceConfiguration.Key))
-                        .ToString();
-            return sasToken;
-        }
+        return sasToken;
     }
 }

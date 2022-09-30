@@ -4,22 +4,21 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace CarsIsland.API.Core.DependencyInjection
+namespace CarsIsland.API.Core.DependencyInjection;
+
+public static class SwaggerCollectionExtensions
 {
-    public static class SwaggerCollectionExtensions
+    public static IServiceCollection AddSwagger(this IServiceCollection services)
     {
-        public static IServiceCollection AddSwagger(this IServiceCollection services)
+        services.AddSwaggerGen(c =>
         {
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cars Island API", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cars Island API", Version = "v1" });
 
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
-            });
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            c.IncludeXmlComments(xmlPath);
+        });
 
-            return services;
-        }
+        return services;
     }
 }

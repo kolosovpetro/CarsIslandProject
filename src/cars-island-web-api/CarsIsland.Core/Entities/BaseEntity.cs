@@ -1,10 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CarsIsland.Core.Entities
+namespace CarsIsland.Core.Entities;
+
+public abstract class BaseEntity
 {
-    public abstract class BaseEntity
-    {
-        [JsonPropertyName("id")]
-        public string Id { get; set; }
-    }
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
 }
