@@ -7,64 +7,72 @@
 
 <p>Here are the cars available in our offer:</p>
 
-@if (cars == null)
+@if (_cars == null)
 {
-    <p><em>Loading...</em></p>
-    @if (showAdditionalLoadingInformation)
+    <p>
+        <em>Loading...</em>
+    </p>
+    @if (_showAdditionalLoadingInformation)
     {
-        <p><b>@serverUnavailableInformation</b></p>
+        <p>
+            <b>@_serverUnavailableInformation</b>
+        </p>
     }
 }
 else
 {
     <table class="table">
         <thead>
-            <tr>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Price per day</th>
-                <th>Location</th>
-                <th>Image</th>
-            </tr>
+        <tr>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Price per day</th>
+            <th>Location</th>
+            <th>Image</th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var car in cars)
-            {
-                <tr>
-                    <td>@car.Brand</td>
-                    <td>@car.Model</td>
-                    <td>@car.PricePerDay$</td>
-                    <td>@car.Location</td>
-                    <td><img src="@car.ImageUrl" asp-append-version="true" width="200px" /></td>
-                </tr>
-            }
+        @foreach (var car in _cars)
+        {
+            <tr>
+                <td>@car.Brand</td>
+                <td>@car.Model</td>
+                <td>@car.PricePerDay$</td>
+                <td>@car.Location</td>
+                <td>
+                    <img src="@(BlobUrl + car.ImageUrl)" asp-append-version="true" width="200px" alt="@(car.Model)"/>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 }
 
 @code {
-    private IReadOnlyCollection<Car> cars;
-    private bool showAdditionalLoadingInformation = false;
-    private string serverUnavailableInformation = string.Empty;
+    private IReadOnlyCollection<Car> _cars;
+    private bool _showAdditionalLoadingInformation;
+    private string _serverUnavailableInformation = string.Empty;
+        private const string BlobUrl = "https://carislandstorage1.blob.core.windows.net/cars-images-container/";
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            cars = await CarDataService.GetCarsAsync();
-            showAdditionalLoadingInformation = false;
+            _cars = await CarDataService.GetCarsAsync();
+            _showAdditionalLoadingInformation = false;
         }
 
         catch (ApplicationException)
         {
-            serverUnavailableInformation = "We cannot get cars from the server. Please try again";
-            showAdditionalLoadingInformation = true;
+            _serverUnavailableInformation = "We cannot get cars from the server. Please try again";
+            _showAdditionalLoadingInformation = true;
         }
 
         catch (Polly.CircuitBreaker.BrokenCircuitException)
         {
-            serverUnavailableInformation = "Server is busy... Please wait, we will try to send the request again soon...";
-            showAdditionalLoadingInformation = true;
+            _serverUnavailableInformation = "Server is busy... Please wait, we will try to send the request again soon...";
+            _showAdditionalLoadingInformation = true;
         }
     }
+
 }
