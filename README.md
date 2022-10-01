@@ -43,6 +43,17 @@
 - **Create Analytics Workspace**
     - `az monitor log-analytics workspace create --resource-group "rg-car-rental-solution" --workspace-name "car-rental-workspace"`
 
+#### Deploy apps
+
+- API
+  - `dotnet publish --configuration Release --output .\bin\publish`
+  - `Compress-Archive .\bin\publish\* .\api.zip -Force`
+  - `az webapp deployment source config-zip --resource-group "rg-car-rental-solution" --src "api.zip" --name "app-car-rental-webapi"`
+- Web App
+  - `dotnet publish --configuration Release --output .\bin\publish`
+  - `Compress-Archive .\bin\publish\* .\app.zip -Force`
+  - `az webapp deployment source config-zip --resource-group "rg-car-rental-solution" --src "app.zip" --name "app-car-rental-webapp"`
+
 ![application-overview.PNG](images/application-overview.PNG)
 
 ![architecture.png](images/architecture.png)
