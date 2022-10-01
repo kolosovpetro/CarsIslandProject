@@ -71,6 +71,16 @@ In powershell run:
 - `openssl pkcs12 -export -out $pfxFilePath -inkey privateKey.key -in selfsigncert.crt -password pass:$pwd`
 - `openssl pkcs12 -in selfsigncert.pfx -out selfsigncert.pem -nodes`
 
+#### Add Certificate Azure Portal
+
+![add_cert_azure_portal](img/01_azure_portal_add_cert.PNG)
+
+#### Add Certificate Postman
+
+![add_cert_postman](img/02_add_postman_certificate.PNG)
+
+#### Architecture
+
 ![application-overview.PNG](images/application-overview.PNG)
 
 ![architecture.png](images/architecture.png)

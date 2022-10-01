@@ -3,7 +3,7 @@
         <base />
         <choose>
             <when condition="@(context.Request.Certificate == null ||
-            context.Request.Certificate.Thumbprint != "DDA4074F706A892DE3D83BE94F1FB2E9C7779307")">
+            context.Request.Certificate.Thumbprint != "DCCEBAD8960D52F24292DA94FE72B238603AC683")">
                 <return-response>
                     <set-status code="403" reason="Invalid client certificate" />
                 </return-response>
