@@ -54,6 +54,10 @@
   - `Compress-Archive .\bin\publish\* .\app.zip -Force`
   - `az webapp deployment source config-zip --resource-group "rg-car-rental-solution" --src "app.zip" --name "app-car-rental-webapp"`
 
+#### Create API Management
+
+
+
 ![application-overview.PNG](images/application-overview.PNG)
 
 ![architecture.png](images/architecture.png)
