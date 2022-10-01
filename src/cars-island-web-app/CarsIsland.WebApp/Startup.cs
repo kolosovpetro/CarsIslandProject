@@ -21,10 +21,8 @@ namespace CarsIsland.WebApp
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
@@ -32,11 +30,14 @@ namespace CarsIsland.WebApp
             services.AddApplicationInsightsTelemetry();
 
             services.AddHttpClient<ICarsIslandApiService, CarsIslandApiService>(configureClient =>
-            {
-                configureClient.BaseAddress = new Uri(Configuration.GetSection("CarsIslandApi:Url").Value);
-            })
-            .AddPolicyHandler(GetRetryPolicy(services))
-            .AddPolicyHandler(GetCircuitBreakerPolicy(services));
+                {
+                    var address = Environment.GetEnvironmentVariable("CARS_API_ADDRESS")
+                                  ?? throw new InvalidOperationException("CARS_API_ADDRESS env variable is missing.");
+
+                    configureClient.BaseAddress = new Uri(address);
+                })
+                .AddPolicyHandler(GetRetryPolicy(services))
+                .AddPolicyHandler(GetCircuitBreakerPolicy(services));
 
 
             services.AddScoped<CarDataService>();
@@ -46,52 +47,52 @@ namespace CarsIsland.WebApp
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(IServiceCollection services)
         {
             return HttpPolicyExtensions
-              // Handle HttpRequestExceptions, 408 and 5xx status codes:
-              .HandleTransientHttpError()
-              // Handle 404 not found
-              .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
-              // Retry 3 times, each time wait 2, 4 and 8 seconds before retrying:
-              .WaitAndRetryAsync(new[]
-                {
-                   TimeSpan.FromSeconds(2),
-                   TimeSpan.FromSeconds(4),
-                   TimeSpan.FromSeconds(8)
-                },
-                 onRetry: (outcome, timespan, retryAttempt, context) =>
-                 {
-                     services.BuildServiceProvider()
-                             .GetRequiredService<ILogger<CarsIslandApiService>>()?
-                             .LogError("Delaying for {delay}ms, then making retry: {retry}.", timespan.TotalMilliseconds, retryAttempt);
-                 });
+                // Handle HttpRequestExceptions, 408 and 5xx status codes:
+                .HandleTransientHttpError()
+                // Handle 404 not found
+                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+                // Retry 3 times, each time wait 2, 4 and 8 seconds before retrying:
+                .WaitAndRetryAsync(new[]
+                    {
+                        TimeSpan.FromSeconds(2),
+                        TimeSpan.FromSeconds(4),
+                        TimeSpan.FromSeconds(8)
+                    },
+                    onRetry: (outcome, timespan, retryAttempt, context) =>
+                    {
+                        services.BuildServiceProvider()
+                            .GetRequiredService<ILogger<CarsIslandApiService>>()?
+                            .LogError("Delaying for {delay}ms, then making retry: {retry}.", timespan.TotalMilliseconds,
+                                retryAttempt);
+                    });
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(IServiceCollection services)
         {
+            // Handle HttpRequestExceptions, 408 and 5xx status codes:
             return HttpPolicyExtensions
-              // Handle HttpRequestExceptions, 408 and 5xx status codes:
-              .HandleTransientHttpError()
-              .CircuitBreakerAsync(3, TimeSpan.FromSeconds(10),
-              onBreak:(result, timeSpan, context) =>
-              {
-                  services.BuildServiceProvider()
-                              .GetRequiredService<ILogger<CarsIslandApiService>>()?
-                              .LogError("CircuitBreaker onBreak for {delay}ms", timeSpan.TotalMilliseconds);
-              },
-              onReset: context =>
-              {
-                 services.BuildServiceProvider()
-                              .GetRequiredService<ILogger<CarsIslandApiService>>()?
-                              .LogError("CircuitBreaker closed again"); 
-              },
-              onHalfOpen: () =>
-              {
-                  services.BuildServiceProvider()
-                              .GetRequiredService<ILogger<CarsIslandApiService>>()?
-                              .LogError("CircuitBreaker onHalfOpen");
-              });
+                .HandleTransientHttpError()
+                .CircuitBreakerAsync(3, TimeSpan.FromSeconds(10),
+                    onBreak: (result, timeSpan, context) =>
+                    {
+                        services.BuildServiceProvider()
+                            .GetRequiredService<ILogger<CarsIslandApiService>>()?
+                            .LogError("CircuitBreaker onBreak for {delay}ms", timeSpan.TotalMilliseconds);
+                    },
+                    onReset: context =>
+                    {
+                        services.BuildServiceProvider()
+                            .GetRequiredService<ILogger<CarsIslandApiService>>()?
+                            .LogError("CircuitBreaker closed again");
+                    },
+                    onHalfOpen: () =>
+                    {
+                        services.BuildServiceProvider()
+                            .GetRequiredService<ILogger<CarsIslandApiService>>()?
+                            .LogError("CircuitBreaker onHalfOpen");
+                    });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -101,7 +102,6 @@ namespace CarsIsland.WebApp
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
