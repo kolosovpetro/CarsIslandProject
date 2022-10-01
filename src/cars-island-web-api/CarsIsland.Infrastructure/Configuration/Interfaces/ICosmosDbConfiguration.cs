@@ -2,9 +2,9 @@
 
 public interface ICosmosDbConfiguration
 {
-    string ConnectionString { get; set; }
-    string DatabaseName { get; set; }
-    string CarContainerName { get; set; }
-    string EnquiryContainerName { get; set; }
-    string PartitionKeyPath { get; set; }
+    public string ConnectionString { get; set; }
+    public string DatabaseName { get; set; }
+    public string CarContainerName { get; set; }
+    public string EnquiryContainerName { get; set; }
+    public string PartitionKeyPath { get; set; }
 }
