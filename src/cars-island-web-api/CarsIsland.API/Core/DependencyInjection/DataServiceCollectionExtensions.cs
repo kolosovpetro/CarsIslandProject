@@ -71,7 +71,7 @@ public static class DataServiceCollectionExtensions
     {
         new Car
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = "77c7c340-1a58-4fb5-9f60-19d06b265dfa",
             Brand = "BNW",
             ImageUrl = "bmw-car-image.jpg",
             Location = "Warsaw, Poland",
@@ -80,7 +80,7 @@ public static class DataServiceCollectionExtensions
         },
         new Car
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = "d707610b-ffe6-4ccf-9a13-82091dc86523",
             Brand = "Audi",
             ImageUrl = "audi-car-image.jpg",
             Location = "Berlin, Germany",
@@ -89,7 +89,7 @@ public static class DataServiceCollectionExtensions
         },
         new Car
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = "d7e3a99e-8541-4b11-864b-65490518e633",
             Brand = "Fiat",
             ImageUrl = "fiat-car-image.png",
             Location = "Milano, Italy",
@@ -98,7 +98,7 @@ public static class DataServiceCollectionExtensions
         },
         new Car
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = "9197eb4d-980b-48e8-819a-a4779b4343dc",
             Brand = "Smart car",
             ImageUrl = "smart-car-image.jpg",
             Location = "Poznan, Poland",
@@ -107,7 +107,7 @@ public static class DataServiceCollectionExtensions
         },
         new Car
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = "63faac16-108e-4b85-9fdd-c1b33bf8f2ba",
             Brand = "Mercedes-Benz",
             ImageUrl = "mercedes-car-image.jpg",
             Location = "Poznan, Poland",
@@ -116,7 +116,7 @@ public static class DataServiceCollectionExtensions
         },
         new Car
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = "aaffc252-9808-40bf-b96a-aa20bb8e01d9",
             Brand = "Mercedes-Benz",
             ImageUrl = "mercedes-car-img.png",
             Location = "Lublin, Poland",
