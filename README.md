@@ -61,7 +61,15 @@
     - `Compress-Archive .\bin\publish\* .\app.zip -Force`
     - `az webapp deployment source config-zip --resource-group "rg-car-rental-solution" --src "app.zip" --name "app-car-rental-webapp"`
 
-#### Create API Management
+#### Generate certificate
+
+In powershell run:
+
+- `$pwd="Test1234@"`
+- `$pfxFilePath="D:\RiderProjects\MonitoringAndLogging.AZ204\cert\selfsigncert.pfx"`
+- `openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout privateKey.key -out selfsigncert.crt -subj /CN=localhost`
+- `openssl pkcs12 -export -out $pfxFilePath -inkey privateKey.key -in selfsigncert.crt -password pass:$pwd`
+- `openssl pkcs12 -in selfsigncert.pfx -out selfsigncert.pem -nodes`
 
 ![application-overview.PNG](images/application-overview.PNG)
 
