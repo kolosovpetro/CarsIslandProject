@@ -1,5 +1,12 @@
 # Repository for Cars Island rental solution
 
+## FAQ
+
+- How to publish APIM developer portal? On portal page
+  select: `Portal overview (left pane) -> Publish portal, Enable CORS`
+- What is APIM
+  product? `It Contains one or more APIs, a usage quota, and the terms of use, defines are how APIs are surfaced to developers.`
+
 ## 1. Car Island API
 
 #### Required Nuget Packages
@@ -46,17 +53,15 @@
 #### Deploy apps
 
 - API
-  - `dotnet publish --configuration Release --output .\bin\publish`
-  - `Compress-Archive .\bin\publish\* .\api.zip -Force`
-  - `az webapp deployment source config-zip --resource-group "rg-car-rental-solution" --src "api.zip" --name "app-car-rental-webapi"`
+    - `dotnet publish --configuration Release --output .\bin\publish`
+    - `Compress-Archive .\bin\publish\* .\api.zip -Force`
+    - `az webapp deployment source config-zip --resource-group "rg-car-rental-solution" --src "api.zip" --name "app-car-rental-webapi"`
 - Web App
-  - `dotnet publish --configuration Release --output .\bin\publish`
-  - `Compress-Archive .\bin\publish\* .\app.zip -Force`
-  - `az webapp deployment source config-zip --resource-group "rg-car-rental-solution" --src "app.zip" --name "app-car-rental-webapp"`
+    - `dotnet publish --configuration Release --output .\bin\publish`
+    - `Compress-Archive .\bin\publish\* .\app.zip -Force`
+    - `az webapp deployment source config-zip --resource-group "rg-car-rental-solution" --src "app.zip" --name "app-car-rental-webapp"`
 
 #### Create API Management
-
-
 
 ![application-overview.PNG](images/application-overview.PNG)
 
