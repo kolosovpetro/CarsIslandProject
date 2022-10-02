@@ -38,20 +38,19 @@ public class EnquiryController : ControllerBase
     /// <response code="400">Model is not valid</response>
     /// <response code="500">Oops! something went wrong</response>
     [ProducesResponseType(typeof(Enquiry), 200)]
-    [HttpPost()]
+    [HttpPost]
     public async Task<IActionResult> AddNewEnquiry([FromForm] CustomerEnquiry customerEnquiry)
     {
         var attachmentUrl = string.Empty;
         var fileTempPath = string.Empty;
+        
         if (customerEnquiry.Attachment != null)
         {
             var fileName = $"{Guid.NewGuid()}-{customerEnquiry.Attachment.FileName}";
             fileTempPath = @$"{Path.GetTempPath()}{fileName}";
-            using (var stream = new FileStream(fileTempPath, FileMode.Create, FileAccess.ReadWrite))
-            {
-                await customerEnquiry.Attachment.CopyToAsync(stream);
-                attachmentUrl = await _blobStorageService.UploadBlobAsync(stream, fileName);
-            }
+            await using var stream = new FileStream(fileTempPath, FileMode.Create, FileAccess.ReadWrite);
+            await customerEnquiry.Attachment.CopyToAsync(stream);
+            attachmentUrl = await _blobStorageService.UploadBlobAsync(stream, fileName);
         }
 
         var enquiry = new Enquiry

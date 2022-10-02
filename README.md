@@ -1,5 +1,7 @@
 # Repository for Cars Island rental solution
 
+[Comprehensive lab on APIM policies](https://azure.github.io/apim-lab/apim-lab/7-security/apimanagement-7-1-JWT-Validation.html)
+
 ## FAQ
 
 - How to publish APIM developer portal? On portal page

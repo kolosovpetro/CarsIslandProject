@@ -3,7 +3,7 @@
         <base />
         <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Unauthorized">
             <issuer-signing-keys>
-                <key>98aef10a-ef60-44fe-a3e7-78b34bfe07fe</key>
+                <key>0b9137730e06443183888e4eda727bc5</key>
             </issuer-signing-keys>
         </validate-jwt>
     </inbound>
