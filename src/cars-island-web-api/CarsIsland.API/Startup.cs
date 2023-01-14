@@ -19,7 +19,6 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddAppConfiguration(Configuration)
-            .AddApplicationInsightsTelemetry()
             .AddDataServices()
             .AddStorageServices()
             .AddSwagger();

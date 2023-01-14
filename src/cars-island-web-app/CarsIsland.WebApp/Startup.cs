@@ -27,14 +27,12 @@ namespace CarsIsland.WebApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddApplicationInsightsTelemetry();
 
             services.AddHttpClient<ICarsIslandApiService, CarsIslandApiService>(configureClient =>
                 {
-                    var address = Environment.GetEnvironmentVariable("CARS_API_ADDRESS")
-                                  ?? throw new InvalidOperationException("CARS_API_ADDRESS env variable is missing.");
+                    var apiAddress = Configuration.GetValue<string>("API_ADDRESS");
 
-                    configureClient.BaseAddress = new Uri(address);
+                    configureClient.BaseAddress = new Uri(apiAddress);
                 })
                 .AddPolicyHandler(GetRetryPolicy(services))
                 .AddPolicyHandler(GetCircuitBreakerPolicy(services));
@@ -58,7 +56,7 @@ namespace CarsIsland.WebApp
                         TimeSpan.FromSeconds(4),
                         TimeSpan.FromSeconds(8)
                     },
-                    onRetry: (outcome, timespan, retryAttempt, context) =>
+                    onRetry: (_, timespan, retryAttempt, _) =>
                     {
                         services.BuildServiceProvider()
                             .GetRequiredService<ILogger<CarsIslandApiService>>()?
@@ -73,13 +71,13 @@ namespace CarsIsland.WebApp
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .CircuitBreakerAsync(3, TimeSpan.FromSeconds(10),
-                    onBreak: (result, timeSpan, context) =>
+                    onBreak: (_, timeSpan, _) =>
                     {
                         services.BuildServiceProvider()
                             .GetRequiredService<ILogger<CarsIslandApiService>>()?
                             .LogError("CircuitBreaker onBreak for {delay}ms", timeSpan.TotalMilliseconds);
                     },
-                    onReset: context =>
+                    onReset: _ =>
                     {
                         services.BuildServiceProvider()
                             .GetRequiredService<ILogger<CarsIslandApiService>>()?
