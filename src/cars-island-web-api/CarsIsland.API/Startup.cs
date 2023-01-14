@@ -1,4 +1,6 @@
 using CarsIsland.API.Core.DependencyInjection;
+using CarsIsland.Infrastructure.Configuration;
+using CarsIsland.Infrastructure.Configuration.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,9 +20,14 @@ public class Startup
         
     public void ConfigureServices(IServiceCollection services)
     {
+        var blobSettings = Configuration.GetSection("BlobStorageSettings")
+            .Get<BlobStorageServiceConfiguration>();
+        
+        var containerName = blobSettings.ContainerName;
+        
         services.AddAppConfiguration(Configuration)
             .AddDataServices()
-            .AddStorageServices()
+            .AddStorageServices(containerName)
             .AddSwagger();
 
         services.AddControllers();
