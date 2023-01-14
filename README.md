@@ -35,7 +35,7 @@
     - `az appservice plan create --name "carislandplan" --resource-group "rg-car-rental-solution" --sku "F1"`
     - `az webapp list-runtimes`
     - `az webapp create --resource-group "rg-car-rental-solution" --name "app-car-rental-webapi" --plan "carislandplan" --runtime "dotnet:6"`
-    - `az webapp create --resource-group "rg-car-rental-solution" --name "app-car-rental-webapp" --plan "carislandplan" --runtime "DOTNETCORE:3.1"`
+    - `az webapp create --resource-group "rg-car-rental-solution" --name "app-car-rental-webapp" --plan "carislandplan" --runtime "dotnet:6"`
 
 - **Create Azure Cosmos DB**
     - `az cosmosdb create --name "cosmos-acc-car-island" --resource-group "rg-car-rental-solution"`
