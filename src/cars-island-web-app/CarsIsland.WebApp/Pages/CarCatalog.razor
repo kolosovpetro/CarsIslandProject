@@ -2,6 +2,7 @@
 
 @using CarsIsland.WebApp.Data
 @inject CarDataService CarDataService
+@inject BlobConfiguration BlobConfiguration
 
 <h1>Available cars catalog</h1>
 
@@ -40,7 +41,7 @@ else
                 <td>@car.PricePerDay$</td>
                 <td>@car.Location</td>
                 <td>
-                    <img src="@(BlobUrl + car.ImageUrl)" asp-append-version="true" width="200px" alt="@(car.Model)"/>
+                    <img src="@(BlobConfiguration.BlobServerAddress + car.ImageUrl)" asp-append-version="true" width="200px" alt="@(car.Model)"/>
                 </td>
             </tr>
         }
@@ -52,7 +53,6 @@ else
     private IReadOnlyCollection<Car> _cars;
     private bool _showAdditionalLoadingInformation;
     private string _serverUnavailableInformation = string.Empty;
-        private const string BlobUrl = "https://carislandstorage1.blob.core.windows.net/cars-images-container/";
 
     protected override async Task OnInitializedAsync()
     {

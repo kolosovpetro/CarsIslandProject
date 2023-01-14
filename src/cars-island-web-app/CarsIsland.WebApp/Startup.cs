@@ -40,6 +40,10 @@ namespace CarsIsland.WebApp
 
             services.AddScoped<CarDataService>();
             services.AddScoped<EnquiryDataService>();
+
+            var blobConfiguration = Configuration.GetSection("BlobConfiguration").Get<BlobConfiguration>();
+            
+            services.AddSingleton(blobConfiguration);
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(IServiceCollection services)
