@@ -4,6 +4,7 @@
 
 - [Comprehensive lab on APIM policies](https://azure.github.io/apim-lab/apim-lab/7-security/apimanagement-7-1-JWT-Validation.html)
 - [Implementing Orchestration Automation Solutions](https://app.pluralsight.com/library/courses/microsoft-devops-solutions-implementing-orchestration-automation-solutions/table-of-contents)
+- [In case of 'XML specified is not syntactically valid'](https://stackoverflow.com/a/68889116)
 
 ## FAQ
 
@@ -46,7 +47,7 @@
     - `az cosmosdb sql container create -g "rg-car-rental-solution" -a "cosmos-acc-car-island" -d "azuredevtemplatesdb" -n "products" --partition-key-path "/id"`
 
 - **Create Blob Container**
-    - `az storage account create --name "carislandstorage1" --resource-group "rg-car-rental-solution" --location "centralus" --sku "Standard_ZRS" --kind "StorageV2"`
+    - `az storage account create --name "carislandstorage1" --resource-group "rg-car-rental-solution" --location "westus" --sku "Standard_LRS" --kind "StorageV2"`
     - `az storage container create --name "cars-images-container" --account-name "carislandstorage1" --public-access "blob"`
     - `az storage account show-connection-string --name "carislandstorage1" --resource-group "rg-car-rental-solution" --subscription "Azure for Students"`
     - Upload images to the
@@ -65,6 +66,14 @@
     - `dotnet publish --configuration Release --output .\bin\publish`
     - `Compress-Archive .\bin\publish\* .\app.zip -Force`
     - `az webapp deployment source config-zip --resource-group "rg-car-rental-solution" --src "app.zip" --name "app-car-rental-webapp"`
+
+#### Deploy rg via ARM template
+
+- `az deployment sub create --location "westus" --template-file "./arm-templates/rg-azure-deploy.json"`
+
+#### Deploy ARM template
+
+- [How to deploy arm template](https://github.com/kolosovpetro/Roadmap.AZ204/blob/master/DevelopAzureComputeSoultions/04_arm_template_deploy_cli.md)
 
 #### Generate certificate
 
