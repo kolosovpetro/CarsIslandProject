@@ -1,6 +1,9 @@
 # Repository for Cars Island rental solution
 
-[Comprehensive lab on APIM policies](https://azure.github.io/apim-lab/apim-lab/7-security/apimanagement-7-1-JWT-Validation.html)
+## Sources
+
+- [Comprehensive lab on APIM policies](https://azure.github.io/apim-lab/apim-lab/7-security/apimanagement-7-1-JWT-Validation.html)
+- [Implementing Orchestration Automation Solutions](https://app.pluralsight.com/library/courses/microsoft-devops-solutions-implementing-orchestration-automation-solutions/table-of-contents)
 
 ## FAQ
 
