@@ -1,0 +1,82 @@
+trigger: none
+
+variables:
+  - name: location
+    value: 'westus'
+  - name: rgNameDev
+    value: 'rg-cars-island-dev'
+  - name: rgNameQa
+    value: 'rg-cars-island-qa'
+  - name: subscription
+    value: 'f32f6566-8fa0-4198-9c91-a3b8ac69e89a'
+
+stages:
+  - stage: "dev"
+    displayName: "Deploy ARM to DEV environment"
+    jobs:
+      - deployment: Deploy_ARM_Dev
+        displayName: "Deploy ARM Dev"
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: dev
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                  fetchDepth: 0
+
+                - task: AzureResourceManagerTemplateDeployment@3
+                  displayName: 'ARM Template deployment: resource group'
+                  inputs:
+                    deploymentScope: 'Subscription'
+                    azureResourceManagerConnection: 'CarsIslandAzureConnection'
+                    subscriptionId: '$(subscription)'
+                    location: '$(location)'
+                    csmFile: '$(System.DefaultWorkingDirectory)/arm-templates/rg-azure-deploy.json'
+                    csmParametersFile: '$(System.DefaultWorkingDirectory)/arm-templates/rg-azure-deploy.parameters.dev.json'
+
+                - task: AzureResourceManagerTemplateDeployment@3
+                  displayName: 'ARM Template deployment'
+                  inputs:
+                    azureResourceManagerConnection: CarsIslandAzureConnection
+                    subscriptionId: '$(subscription)'
+                    resourceGroupName: '$(rgNameDev)'
+                    location: '$(location)'
+                    csmFile: '$(System.DefaultWorkingDirectory)/arm-templates/template.json'
+                    csmParametersFile: '$(System.DefaultWorkingDirectory)/arm-templates/parameters.dev.json'
+                    
+  - stage: "qa"
+    displayName: "Deploy ARM to QA environment"
+    jobs:
+      - deployment: Deploy_ARM_Qa
+        displayName: "Deploy ARM Qa"
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: qa
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                  fetchDepth: 0
+
+                - task: AzureResourceManagerTemplateDeployment@3
+                  displayName: 'ARM Template deployment: resource group'
+                  inputs:
+                    deploymentScope: 'Subscription'
+                    azureResourceManagerConnection: 'CarsIslandAzureConnection'
+                    subscriptionId: '$(subscription)'
+                    location: '$(location)'
+                    csmFile: '$(System.DefaultWorkingDirectory)/arm-templates/rg-azure-deploy.json'
+                    csmParametersFile: '$(System.DefaultWorkingDirectory)/arm-templates/rg-azure-deploy.parameters.qa.json'
+
+                - task: AzureResourceManagerTemplateDeployment@3
+                  displayName: 'ARM Template deployment'
+                  inputs:
+                    azureResourceManagerConnection: CarsIslandAzureConnection
+                    subscriptionId: '$(subscription)'
+                    resourceGroupName: '$(rgNameQa)'
+                    location: '$(location)'
+                    csmFile: '$(System.DefaultWorkingDirectory)/arm-templates/template.json'
+                    csmParametersFile: '$(System.DefaultWorkingDirectory)/arm-templates/parameters.qa.json'
