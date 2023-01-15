@@ -69,9 +69,20 @@
 
 #### Deploy rg via ARM template
 
-- `az deployment sub create --location "westus" --template-file "./arm-templates/rg-azure-deploy.json"`
+- `az deployment sub create --location "westus" --parameters "./arm-templates/rg-azure-deploy.parameters.dev.json" --template-file "./arm-templates/rg-azure-deploy.json"`
+- `az deployment sub create --location "westus" --parameters "./arm-templates/rg-azure-deploy.parameters.qa.json" --template-file "./arm-templates/rg-azure-deploy.json"`
 
 #### Deploy ARM template
+
+- Create resource group
+  - `$rgName="rg-ubuntu-vm-arm"`
+  - `$location="westus"`
+  - `az group create -n $rgName -l $location`
+
+- Deploy template
+  - `$templatePath = "./arm_templates/exported-portal-rg-ubuntu-vm/template.json"`
+  - `$parametersPath = "./arm_templates/exported-portal-rg-ubuntu-vm/parameters.json"`
+  - `az deployment group create -g $rgName --template-file $templatePath --parameters $parametersPath`
 
 - [How to deploy arm template](https://github.com/kolosovpetro/Roadmap.AZ204/blob/master/DevelopAzureComputeSoultions/04_arm_template_deploy_cli.md)
 

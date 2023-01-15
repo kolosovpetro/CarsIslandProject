@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serverfarms_carislandplan_name": {
+            "value": "carqaplan"
+        },
+        "sites_app_car_rental_webapi_name": {
+            "value": "carqaapi"
+        },
+        "sites_app_car_rental_webapp_name": {
+            "value": "carqaapp"
+        },
+        "storageAccounts_carislandstorage1_name": {
+            "value": "carqastor"
+        },
+        "databaseAccounts_cosmos_acc_car_island_name": {
+            "value": "cosmos-acc-qa"
+        }
+    }
+}
