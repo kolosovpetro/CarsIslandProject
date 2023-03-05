@@ -16,7 +16,11 @@ Web App Screen:
 
 ![web_app](./img/cars/application-overview.PNG)
 
-## 1. Car Island API
+### Docker build commands
+
+- `docker build -t cars-island-webapi ./src/cars-island-web-api`
+- `docker run -d -p 9000:80 --name cars-island-api "cars-island-webapi:latest"`
+- `docker build -t cars-island-webapp .`
 
 ### Required Nuget Packages
 

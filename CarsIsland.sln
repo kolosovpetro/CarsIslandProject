@@ -70,6 +70,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{C2E13CC7
 		.editorconfig = .editorconfig
 		nuget.config = nuget.config
 		GitVersion.yml = GitVersion.yml
+		.dockerignore = .dockerignore
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{EBD7B565-2BE7-46FC-9123-CDB26C266D12}"
@@ -83,8 +84,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{57ACAACE-6979-4B78-A1F0-38F14B2EA3D3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cars-island-web-api", "cars-island-web-api", "{1D1F1CC7-8DC2-44C4-BE98-F322B3FE61E9}"
+	ProjectSection(SolutionItems) = preProject
+		src\cars-island-web-api\Dockerfile = src\cars-island-web-api\Dockerfile
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cars-island-web-app", "cars-island-web-app", "{3FD64BF5-CB12-4E7E-AABE-EE62C7BD2765}"
+	ProjectSection(SolutionItems) = preProject
+		src\cars-island-web-app\Dockerfile = src\cars-island-web-app\Dockerfile
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsIsland.API", "src\cars-island-web-api\CarsIsland.API\CarsIsland.API.csproj", "{2747554D-9169-411E-8962-204FBFB93833}"
 EndProject
