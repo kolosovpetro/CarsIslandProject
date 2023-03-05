@@ -1,28 +1,31 @@
 # Repository for Cars Island rental solution
 
-## Sources
+Demo project that contains examples of use:
 
-- [Comprehensive lab on APIM policies](https://azure.github.io/apim-lab/apim-lab/7-security/apimanagement-7-1-JWT-Validation.html)
-- [Implementing Orchestration Automation Solutions](https://app.pluralsight.com/library/courses/microsoft-devops-solutions-implementing-orchestration-automation-solutions/table-of-contents)
-- [In case of 'XML specified is not syntactically valid'](https://stackoverflow.com/a/68889116)
+- APIM
+- ARM templates
+- Terraform infrastructure provisioning
+- Kubernetes deployments via azure pipelines to AKS cluster
+- Deployments to classic Azure App Service
 
-## FAQ
+Architecture diagram:
 
-- How to publish APIM developer portal? On portal page
-  select: `Portal overview (left pane) -> Publish portal, Enable CORS`
-- What is APIM
-  product? `It Contains one or more APIs, a usage quota, and the terms of use, defines are how APIs are surfaced to developers.`
+![architecture](./img/cars/architecture.png)
+
+Web App Screen:
+
+![web_app](./img/cars/application-overview.PNG)
 
 ## 1. Car Island API
 
-#### Required Nuget Packages
+### Required Nuget Packages
 
 - `Azure.Cosmos`
 - `Azure.Storage.Blobs`
 - `Microsoft.Extensions.Logging.Abstractions`
 - `Microsoft.Extensions.Options`
 
-#### Infrastructure provisioning
+### Infrastructure provisioning
 
 - **Configure subscription**
     - `az login`
@@ -56,7 +59,7 @@
 - **Create Analytics Workspace**
     - `az monitor log-analytics workspace create --resource-group "rg-car-rental-solution" --workspace-name "car-rental-workspace"`
 
-#### Deploy apps
+### Deploy apps
 
 - API
     - `dotnet publish --configuration Release --output .\bin\publish`
@@ -67,66 +70,28 @@
     - `Compress-Archive .\bin\publish\* .\app.zip -Force`
     - `az webapp deployment source config-zip --resource-group "rg-car-rental-solution" --src "app.zip" --name "app-car-rental-webapp"`
 
-#### Deploy rg via ARM template
+### Deploy rg via ARM template
 
 - `az deployment sub create --location "westus" --parameters "./arm-templates/rg-azure-deploy.parameters.dev.json" --template-file "./arm-templates/rg-azure-deploy.json"`
 - `az deployment sub create --location "westus" --parameters "./arm-templates/rg-azure-deploy.parameters.qa.json" --template-file "./arm-templates/rg-azure-deploy.json"`
 
-#### Deploy ARM template
+### Deploy ARM template
 
 - Create resource group
-  - `$rgName="rg-ubuntu-vm-arm"`
-  - `$location="westus"`
-  - `az group create -n $rgName -l $location`
+    - `$rgName="rg-ubuntu-vm-arm"`
+    - `$location="westus"`
+    - `az group create -n $rgName -l $location`
 
 - Deploy template
-  - `$templatePath = "./arm_templates/exported-portal-rg-ubuntu-vm/template.json"`
-  - `$parametersPath = "./arm_templates/exported-portal-rg-ubuntu-vm/parameters.json"`
-  - `az deployment group create -g $rgName --template-file $templatePath --parameters $parametersPath`
+    - `$templatePath = "./arm_templates/exported-portal-rg-ubuntu-vm/template.json"`
+    - `$parametersPath = "./arm_templates/exported-portal-rg-ubuntu-vm/parameters.json"`
+    - `az deployment group create -g $rgName --template-file $templatePath --parameters $parametersPath`
 
 - [How to deploy arm template](https://github.com/kolosovpetro/Roadmap.AZ204/blob/master/DevelopAzureComputeSoultions/04_arm_template_deploy_cli.md)
 
-#### Generate certificate
+### Sources
 
-In powershell run:
-
-- `$pwd="Test1234@"`
-- `$pfxFilePath="D:\RiderProjects\MonitoringAndLogging.AZ204\cert\selfsigncert.pfx"`
-- `openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout privateKey.key -out selfsigncert.crt -subj /CN=localhost`
-- `openssl pkcs12 -export -out $pfxFilePath -inkey privateKey.key -in selfsigncert.crt -password pass:$pwd`
-- `openssl pkcs12 -in selfsigncert.pfx -out selfsigncert.pem -nodes`
-
-#### Add Certificate Azure Portal
-
-![add_cert_azure_portal](img/01_azure_portal_add_cert.PNG)
-
-#### Add Certificate Postman
-
-![add_cert_postman](img/02_add_postman_certificate.PNG)
-
-#### Configure JWT validation policy
-
-- Choose a signing key, for example GUID: `0b9137730e06443183888e4eda727bc5`
-- Sign some test token with it, using http://jwtbuilder.jamiekurtz.com
-
-![generate_token](./img/04_jwt_generator.PNG)
-
-- Update sign key inside APIM as per screenshot
-
-![update_apim](./img/03_apim_jwt_sign_key.PNG)
-
-- Copy token to the https://jwt.io
-- Validate its signature
-- Check `secret base64 encoded`
-
-![jwt_io](./img/05_jwt_token_secret_base64_encoded.PNG)
-
-- Copy-paste token from jwt.io to the postman as Bearer Auth Header and send request
-
-![postman](./img/06_postman_response.PNG)
-
-#### Architecture
-
-![application-overview.PNG](images/application-overview.PNG)
-
-![architecture.png](images/architecture.png)
+- [Pluralsight Implementing Orchestration Automation Solutions](https://app.pluralsight.com/library/courses/microsoft-devops-solutions-implementing-orchestration-automation-solutions/table-of-contents)
+- [Deploy ARM using CLI](https://markheath.net/post/deploying-arm-templates-azure-cli)
+- [Create resource group using ARM](https://stackoverflow.com/questions/47670797/azure-arm-template-create-resource-group)
+- [Azure deployment sub CLI](https://learn.microsoft.com/en-us/cli/azure/deployment/sub?view=azure-cli-latest#az-deployment-sub-create)

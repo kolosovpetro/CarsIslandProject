@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api-management-policies", "
 		api-management-policies\policy4_xml_to_json.xml = api-management-policies\policy4_xml_to_json.xml
 		api-management-policies\policy5_validate_jwt.xml = api-management-policies\policy5_validate_jwt.xml
 		api-management-policies\policy6_validate_jwt_claims.xml = api-management-policies\policy6_validate_jwt_claims.xml
+		api-management-policies\README.md = api-management-policies\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "arm-templates", "arm-templates", "{B69C52C3-AFC8-42C1-BA59-8FEB4DE8AEB1}"
@@ -35,6 +36,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cert", "cert", "{C25A6022-9
 		cert\privateKey.key = cert\privateKey.key
 		cert\selfsigncert.crt = cert\selfsigncert.crt
 		cert\selfsigncert.pem = cert\selfsigncert.pem
+		cert\README.md = cert\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{18DC284A-BC62-4E17-84E6-B3973CFE3CD7}"
