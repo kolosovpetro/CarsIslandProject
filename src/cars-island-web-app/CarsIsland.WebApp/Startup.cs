@@ -1,3 +1,4 @@
+using CarsIsland.WebApp.Constants;
 using CarsIsland.WebApp.Data;
 using CarsIsland.WebApp.Services;
 using CarsIsland.WebApp.Services.Interfaces;
@@ -28,12 +29,11 @@ namespace CarsIsland.WebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddHttpClient<ICarsIslandApiService, CarsIslandApiService>(configureClient =>
-                {
-                    var apiAddress = Configuration.GetValue<string>("API_ADDRESS");
+            var apiAddress = Configuration.TryGetFromEnv(ConfigConstants.ApiAddress);
 
-                    configureClient.BaseAddress = new Uri(apiAddress);
-                })
+            services
+                .AddHttpClient<ICarsIslandApiService, CarsIslandApiService>(configureClient
+                    => configureClient.BaseAddress = new Uri(apiAddress))
                 .AddPolicyHandler(GetRetryPolicy(services))
                 .AddPolicyHandler(GetCircuitBreakerPolicy(services));
 
@@ -41,9 +41,11 @@ namespace CarsIsland.WebApp
             services.AddScoped<CarDataService>();
             services.AddScoped<EnquiryDataService>();
 
-            var blobConfiguration = Configuration.GetSection("BlobConfiguration").Get<BlobConfiguration>();
-            
-            services.AddSingleton(blobConfiguration);
+            var blobAddress = Configuration.TryGetFromEnv(ConfigConstants.BlobServerAddress);
+
+            var blobConfig = new BlobConfiguration(blobAddress);
+
+            services.AddSingleton(blobConfig);
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(IServiceCollection services)
@@ -54,12 +56,7 @@ namespace CarsIsland.WebApp
                 // Handle 404 not found
                 .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
                 // Retry 3 times, each time wait 2, 4 and 8 seconds before retrying:
-                .WaitAndRetryAsync(new[]
-                    {
-                        TimeSpan.FromSeconds(2),
-                        TimeSpan.FromSeconds(4),
-                        TimeSpan.FromSeconds(8)
-                    },
+                .WaitAndRetryAsync(new[] { TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(4), TimeSpan.FromSeconds(8) },
                     onRetry: (_, timespan, retryAttempt, _) =>
                     {
                         services.BuildServiceProvider()

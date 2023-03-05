@@ -2,5 +2,10 @@
 
 public class BlobConfiguration
 {
-    public string BlobServerAddress { get; set; }
+    public string BlobServerAddress { get; }
+
+    public BlobConfiguration(string blobServerAddress)
+    {
+        BlobServerAddress = blobServerAddress;
+    }
 }
