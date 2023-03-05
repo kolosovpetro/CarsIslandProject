@@ -32,10 +32,10 @@ jobs:
       DOTNET_NOLOGO: 1
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
       NUGET_PACKAGES: ${{ github.workspace }}/.github/nuget-packages
-      ProjectPath: './src/cars-island-web-api/CarsIsland.WebApp.csproj'
+      ProjectPath: './src/cars-island-web-api/CarsIsland.WebApp/CarsIsland.WebApp.csproj'
       Configuration: 'Release'
       Solution: 'CarsIsland.sln'
-      ArtifactName: 'cars-island-web-app
+      ArtifactName: 'cars-island-web-app'
       ArtifactPath: 'publish'
     
     steps:
