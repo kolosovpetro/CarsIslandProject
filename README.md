@@ -16,11 +16,16 @@ Web App Screen:
 
 ![web_app](./img/cars/application-overview.PNG)
 
-### Docker build commands
+### Docker build & run Web API
 
-- `docker build -t cars-island-webapi ./src/cars-island-web-api`
-- `docker run -d -p 9000:80 --name cars-island-api "cars-island-webapi:latest"`
-- `docker build -t cars-island-webapp .`
+- **Required env. vars:**
+    - `CosmosConnectionString`
+    - `BlobKey`
+    - `BlobConnectionString`
+
+- **Commands:**
+    - `docker build -t "cars-island-webapi" ./src/cars-island-web-api`
+    - `docker run -d -p 9000:80 --name cars-island-api "cars-island-webapi:latest" -e "CosmosConnectionString=$env:CosmosConnectionString" -e "BlobKey=$env:BlobKey" -e "BlobConnectionString=$env:BlobConnectionString"`
 
 ### Required Nuget Packages
 
