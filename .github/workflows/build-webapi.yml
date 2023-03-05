@@ -1,4 +1,4 @@
-﻿name: Build Test & Drop artifacts
+﻿name: Build Web API
 
 on:
   push:
@@ -19,25 +19,24 @@ on:
     - cron: '0 0 * * 0'
 
 jobs:
-  build-test-drop-artifacts:
-    name: Build Test & Drop artifacts
+  build-webapi:
+    name: Build Web API
     runs-on: ${{ matrix.environment }}
     strategy:
       matrix:
         environment:
           - ubuntu-latest
+          - windows-latest
     
     env:
       DOTNET_NOLOGO: 1
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
       NUGET_PACKAGES: ${{ github.workspace }}/.github/nuget-packages
-      ProjectPath: './DotnetTemplate/DotnetTemplate.csproj'
-      TestProjectPath: './DotnetTemplate.Tests/DotnetTemplate.Tests.csproj'
+      ProjectPath: './src/cars-island-web-api/CarsIsland.API.csproj'
       Configuration: 'Release'
-      Solution: 'DotnetTemplate.sln'
-      ArtifactName: 'drop'
+      Solution: 'CarsIsland.sln'
+      ArtifactName: 'cars-island-web-api'
       ArtifactPath: 'publish'
-      PathToTestCoverage: './DotnetTemplate.Tests/TestResults/coverage.info'
     
     steps:
       - name: Fetch Sources
@@ -52,9 +51,6 @@ jobs:
 
       - name: Determine Version
         uses: gittools/actions/gitversion/execute@v0.9.15
-      #        with:
-      #          updateAssemblyInfo: true
-      #          updateAssemblyInfoFilename: 'WebApp/Properties/AssemblyInfo.cs'
 
       - name: Setup .NET 6.0 SDK
         uses: actions/setup-dotnet@v3
@@ -74,28 +70,9 @@ jobs:
         run: |
           dotnet build ${{ env.Solution }} --configuration ${{ env.Configuration }} /p:ContinuousIntegrationBuild=true --no-restore
 
-      - name: Run Unit Tests
-        run: |
-          dotnet test ${{ env.TestProjectPath }} --configuration ${{ env.Configuration }} --no-build
-        env:
-          CollectCoverage: true
-          CoverletOutputFormat: lcov
-          ThresholdStat: total
-          ThresholdType: Line
-          CoverletOutput: TestResults/
-          SkipAutoProps: true
-          Threshold: 80
-
-      - name: Publish coverage report to Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ${{ env.PathToTestCoverage }}
-
       - name: Run .NET Publish
         run: |
           dotnet publish ${{ env.ProjectPath }} --configuration ${{ env.Configuration }} --output ${{ env.ArtifactPath }}
-      #          dotnet publish "WebAppPath/WebAppProject.csproj" -r "linux-x64" -o "project-linux-build/src" --self-contained
 
       - name: Drop Artifact
         uses: actions/upload-artifact@v3
