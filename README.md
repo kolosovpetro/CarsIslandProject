@@ -30,13 +30,12 @@ Web App Screen:
 ### Docker build & run Web App
 
 - **Required env. vars:**
-    - `CosmosConnectionString`
-    - `BlobKey`
-    - `BlobConnectionString`
+    - `BlobServerAddress`
+    - `ApiAddress`
 
 - **Commands:**
-    - `docker build -t "cars-island-webapi" ./src/cars-island-web-api`
-    - `docker run -d -p 9000:80 --name cars-island-api "cars-island-webapi:latest" -e "CosmosConnectionString=$env:CosmosConnectionString" -e "BlobKey=$env:BlobKey" -e "BlobConnectionString=$env:BlobConnectionString"`
+    - `docker build -t "cars-island-webapp" ./src/cars-island-web-app`
+    - `docker run -d -p 8002:80 --name cars-island-app "cars-island-webapp:latest" -e "ApiAddress=http://cars-island-webapi:9000" -e "BlobServerAddress=https://carislandstorage1.blob.core.windows.net/cars-images-container/"`
 
 ### Required Nuget Packages
 

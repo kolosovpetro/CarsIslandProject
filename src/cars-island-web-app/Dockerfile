@@ -8,7 +8,7 @@ WORKDIR /src
 COPY ["CarsIsland.WebApp/CarsIsland.WebApp.csproj", "CarsIsland.WebApp/"]
 RUN dotnet restore "CarsIsland.WebApp/CarsIsland.WebApp.csproj"
 COPY . .
-WORKDIR "/CarsIsland.WebApp"
+WORKDIR "/src/CarsIsland.WebApp"
 RUN dotnet build "CarsIsland.WebApp.csproj" -c Release -o /app/build
 
 FROM build AS publish

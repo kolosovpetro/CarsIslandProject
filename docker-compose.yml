@@ -1,0 +1,26 @@
+version: "3.4"
+
+services:
+  api:
+    build:
+      context: ./src/cars-island-web-api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      CosmosConnectionString: ${CosmosConnectionString}
+      BlobKey: ${BlobKey}
+      BlobConnectionString: ${BlobConnectionString}
+  
+  app:
+    build:
+      context: ./src/cars-island-web-app
+      dockerfile: Dockerfile
+    ports:
+      - "8003:80"
+    
+    environment:
+      BlobServerAddress: "https://carislandstorage1.blob.core.windows.net/cars-images-container/"
+      ApiAddress: "http://api:80"
+    depends_on:
+      - api
