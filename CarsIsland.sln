@@ -35,7 +35,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cert", "cert", "{C25A6022-9
 		cert\privateKey.key = cert\privateKey.key
 		cert\selfsigncert.crt = cert\selfsigncert.crt
 		cert\selfsigncert.pem = cert\selfsigncert.pem
-		cert\selfsigncert.pfx = cert\selfsigncert.pfx
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{18DC284A-BC62-4E17-84E6-B3973CFE3CD7}"
