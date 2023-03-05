@@ -4,9 +4,19 @@ namespace CarsIsland.Infrastructure.Configuration;
 
 public class CosmosDbConfiguration : ICosmosDbConfiguration
 {
-    public string ConnectionString { get; set; }
-    public string DatabaseName { get; set; }
-    public string CarContainerName { get; set; }
-    public string EnquiryContainerName { get; set; }
-    public string PartitionKeyPath { get; set; }
+    public string ConnectionString { get; }
+    public string DatabaseName { get; }
+    public string CarContainerName { get; }
+    public string EnquiryContainerName { get; }
+    public string PartitionKeyPath { get; }
+
+    public CosmosDbConfiguration(string connectionString, string databaseName, string carContainerName,
+        string enquiryContainerName, string partitionKeyPath)
+    {
+        ConnectionString = connectionString;
+        DatabaseName = databaseName;
+        CarContainerName = carContainerName;
+        EnquiryContainerName = enquiryContainerName;
+        PartitionKeyPath = partitionKeyPath;
+    }
 }

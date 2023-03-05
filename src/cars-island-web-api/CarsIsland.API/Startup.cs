@@ -1,6 +1,5 @@
+using CarsIsland.API.Constants;
 using CarsIsland.API.Core.DependencyInjection;
-using CarsIsland.Infrastructure.Configuration;
-using CarsIsland.Infrastructure.Configuration.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -17,14 +16,12 @@ public class Startup
     }
 
     private IConfiguration Configuration { get; }
-        
+
     public void ConfigureServices(IServiceCollection services)
     {
-        var blobSettings = Configuration.GetSection("BlobStorageSettings")
-            .Get<BlobStorageServiceConfiguration>();
+        var containerName = Configuration.TryGetFromEnv(ConfigConstants.BlobContainerName);
         
-        var containerName = blobSettings.ContainerName;
-        
+
         services.AddAppConfiguration(Configuration)
             .AddDataServices()
             .AddStorageServices(containerName)
@@ -32,7 +29,7 @@ public class Startup
 
         services.AddControllers();
     }
-        
+
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())

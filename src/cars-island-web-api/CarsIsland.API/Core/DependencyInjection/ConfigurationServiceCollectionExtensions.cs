@@ -1,8 +1,8 @@
-﻿using CarsIsland.Infrastructure.Configuration;
+﻿using CarsIsland.API.Constants;
+using CarsIsland.Infrastructure.Configuration;
 using CarsIsland.Infrastructure.Configuration.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace CarsIsland.API.Core.DependencyInjection;
 
@@ -10,29 +10,25 @@ public static class ConfigurationServiceCollectionExtensions
 {
     public static IServiceCollection AddAppConfiguration(this IServiceCollection services, IConfiguration config)
     {
-        var blobSettings = config.GetSection("BlobStorageSettings");
-        services.Configure<BlobStorageServiceConfiguration>(blobSettings);
+        var blobAccountName = config.TryGetFromEnv(ConfigConstants.BlobAccountName);
+        var blobKey = config.TryGetFromEnv(ConfigConstants.BlobKey);
+        var blobContainerName = config.TryGetFromEnv(ConfigConstants.BlobContainerName);
+        var blobConnectionString = config.TryGetFromEnv(ConfigConstants.BlobConnectionString);
+        var blobSettings =
+            new BlobStorageServiceConfiguration(blobContainerName, blobConnectionString, blobKey, blobAccountName);
 
-        services
-            .AddSingleton<IValidateOptions<BlobStorageServiceConfiguration>,
-                BlobStorageServiceConfigurationValidation>();
+        services.AddSingleton<IBlobStorageServiceConfiguration>(blobSettings);
 
-        var blobStorageServiceConfiguration = services
-            .BuildServiceProvider()
-            .GetRequiredService<IOptions<BlobStorageServiceConfiguration>>().Value;
+        var cosmosConnectionString = config.TryGetFromEnv(ConfigConstants.CosmosConnectionString);
+        var cosmosDatabaseName = config.TryGetFromEnv(ConfigConstants.CosmosDatabaseName);
+        var cosmosCarContainerName = config.TryGetFromEnv(ConfigConstants.CosmosCarContainerName);
+        var cosmosEnquiryContainerName = config.TryGetFromEnv(ConfigConstants.CosmosEnquiryContainerName);
+        var cosmosPartitionKeyPath = config.TryGetFromEnv(ConfigConstants.CosmosPartitionKeyPath);
 
-        services.AddSingleton<IBlobStorageServiceConfiguration>(blobStorageServiceConfiguration);
+        var cosmosDbSettings = new CosmosDbConfiguration(cosmosConnectionString, cosmosDatabaseName,
+            cosmosCarContainerName, cosmosEnquiryContainerName, cosmosPartitionKeyPath);
 
-        var cosmosDbSettings = config.GetSection("CosmosDbSettings");
-        services.Configure<CosmosDbConfiguration>(cosmosDbSettings);
-
-        services.AddSingleton<IValidateOptions<CosmosDbConfiguration>, CosmosDbConfigurationValidation>();
-
-        var cosmosDbConfiguration = services
-            .BuildServiceProvider()
-            .GetRequiredService<IOptions<CosmosDbConfiguration>>().Value;
-
-        services.AddSingleton<ICosmosDbConfiguration>(cosmosDbConfiguration);
+        services.AddSingleton<ICosmosDbConfiguration>(cosmosDbSettings);
 
         return services;
     }
