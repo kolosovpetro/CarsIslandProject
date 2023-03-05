@@ -1,0 +1,132 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api-management-policies", "api-management-policies", "{F753CBD9-B374-4701-8C7D-388651C1A09D}"
+	ProjectSection(SolutionItems) = preProject
+		api-management-policies\policy1_caching.xml = api-management-policies\policy1_caching.xml
+		api-management-policies\policy2_cert_validation.xml = api-management-policies\policy2_cert_validation.xml
+		api-management-policies\policy3_call_rate_limit.xml = api-management-policies\policy3_call_rate_limit.xml
+		api-management-policies\policy4_xml_to_json.xml = api-management-policies\policy4_xml_to_json.xml
+		api-management-policies\policy5_validate_jwt.xml = api-management-policies\policy5_validate_jwt.xml
+		api-management-policies\policy6_validate_jwt_claims.xml = api-management-policies\policy6_validate_jwt_claims.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "arm-templates", "arm-templates", "{B69C52C3-AFC8-42C1-BA59-8FEB4DE8AEB1}"
+	ProjectSection(SolutionItems) = preProject
+		arm-templates\parameters.dev.json = arm-templates\parameters.dev.json
+		arm-templates\parameters.json = arm-templates\parameters.json
+		arm-templates\parameters.qa.json = arm-templates\parameters.qa.json
+		arm-templates\rg-azure-deploy.json = arm-templates\rg-azure-deploy.json
+		arm-templates\rg-azure-deploy.parameters.dev.json = arm-templates\rg-azure-deploy.parameters.dev.json
+		arm-templates\rg-azure-deploy.parameters.qa.json = arm-templates\rg-azure-deploy.parameters.qa.json
+		arm-templates\template.json = arm-templates\template.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{AC841180-B52D-43C7-86B2-DC40691D9B04}"
+	ProjectSection(SolutionItems) = preProject
+		build\azure-pipelines-arm-deploy.yml = build\azure-pipelines-arm-deploy.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cert", "cert", "{C25A6022-9553-4D34-B4E8-46658C5574C5}"
+	ProjectSection(SolutionItems) = preProject
+		cert\cert-gen-instructions.txt = cert\cert-gen-instructions.txt
+		cert\privateKey.key = cert\privateKey.key
+		cert\selfsigncert.crt = cert\selfsigncert.crt
+		cert\selfsigncert.pem = cert\selfsigncert.pem
+		cert\selfsigncert.pfx = cert\selfsigncert.pfx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{18DC284A-BC62-4E17-84E6-B3973CFE3CD7}"
+	ProjectSection(SolutionItems) = preProject
+		img\01_azure_portal_add_cert.PNG = img\01_azure_portal_add_cert.PNG
+		img\02_add_postman_certificate.PNG = img\02_add_postman_certificate.PNG
+		img\03_apim_jwt_sign_key.PNG = img\03_apim_jwt_sign_key.PNG
+		img\04_jwt_generator.PNG = img\04_jwt_generator.PNG
+		img\05_jwt_token_secret_base64_encoded.PNG = img\05_jwt_token_secret_base64_encoded.PNG
+		img\06_postman_response.PNG = img\06_postman_response.PNG
+		img\07_create_ping_test_portal.PNG = img\07_create_ping_test_portal.PNG
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cars", "cars", "{8948E160-4EA8-4E08-838B-B3F671F4FC70}"
+	ProjectSection(SolutionItems) = preProject
+		img\cars\application-overview.PNG = img\cars\application-overview.PNG
+		img\cars\architecture.png = img\cars\architecture.png
+		img\cars\audi-car-image.jpg = img\cars\audi-car-image.jpg
+		img\cars\bmw-car-image.jpg = img\cars\bmw-car-image.jpg
+		img\cars\fiat-car-image.png = img\cars\fiat-car-image.png
+		img\cars\mercedes-car-image.jpg = img\cars\mercedes-car-image.jpg
+		img\cars\mercedes-car-img.png = img\cars\mercedes-car-img.png
+		img\cars\smart-car-image.jpg = img\cars\smart-car-image.jpg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{C2E13CC7-5AAA-4E2E-B10D-E54C38D23459}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		README.md = README.md
+		.editorconfig = .editorconfig
+		nuget.config = nuget.config
+		GitVersion.yml = GitVersion.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{EBD7B565-2BE7-46FC-9123-CDB26C266D12}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{67B8C8E7-C653-4C06-ACD4-F7BDA5E349AB}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-webapi.yml = .github\workflows\build-webapi.yml
+		.github\workflows\build-webapp.yml = .github\workflows\build-webapp.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{57ACAACE-6979-4B78-A1F0-38F14B2EA3D3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cars-island-web-api", "cars-island-web-api", "{1D1F1CC7-8DC2-44C4-BE98-F322B3FE61E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cars-island-web-app", "cars-island-web-app", "{3FD64BF5-CB12-4E7E-AABE-EE62C7BD2765}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsIsland.API", "src\cars-island-web-api\CarsIsland.API\CarsIsland.API.csproj", "{2747554D-9169-411E-8962-204FBFB93833}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsIsland.Core", "src\cars-island-web-api\CarsIsland.Core\CarsIsland.Core.csproj", "{60F7E0D9-78EA-4899-9C93-DBB5D3E10EBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsIsland.Infrastructure", "src\cars-island-web-api\CarsIsland.Infrastructure\CarsIsland.Infrastructure.csproj", "{67ADA6CC-2330-44E9-9905-28BE8BC653E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsIsland.WebApp", "src\cars-island-web-app\CarsIsland.WebApp\CarsIsland.WebApp.csproj", "{57E5E243-318E-42AA-8262-C089EC2765C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8948E160-4EA8-4E08-838B-B3F671F4FC70} = {18DC284A-BC62-4E17-84E6-B3973CFE3CD7}
+		{67B8C8E7-C653-4C06-ACD4-F7BDA5E349AB} = {EBD7B565-2BE7-46FC-9123-CDB26C266D12}
+		{1D1F1CC7-8DC2-44C4-BE98-F322B3FE61E9} = {57ACAACE-6979-4B78-A1F0-38F14B2EA3D3}
+		{3FD64BF5-CB12-4E7E-AABE-EE62C7BD2765} = {57ACAACE-6979-4B78-A1F0-38F14B2EA3D3}
+		{2747554D-9169-411E-8962-204FBFB93833} = {1D1F1CC7-8DC2-44C4-BE98-F322B3FE61E9}
+		{60F7E0D9-78EA-4899-9C93-DBB5D3E10EBD} = {1D1F1CC7-8DC2-44C4-BE98-F322B3FE61E9}
+		{67ADA6CC-2330-44E9-9905-28BE8BC653E1} = {1D1F1CC7-8DC2-44C4-BE98-F322B3FE61E9}
+		{57E5E243-318E-42AA-8262-C089EC2765C9} = {3FD64BF5-CB12-4E7E-AABE-EE62C7BD2765}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2747554D-9169-411E-8962-204FBFB93833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2747554D-9169-411E-8962-204FBFB93833}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2747554D-9169-411E-8962-204FBFB93833}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2747554D-9169-411E-8962-204FBFB93833}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60F7E0D9-78EA-4899-9C93-DBB5D3E10EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60F7E0D9-78EA-4899-9C93-DBB5D3E10EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60F7E0D9-78EA-4899-9C93-DBB5D3E10EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60F7E0D9-78EA-4899-9C93-DBB5D3E10EBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67ADA6CC-2330-44E9-9905-28BE8BC653E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67ADA6CC-2330-44E9-9905-28BE8BC653E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67ADA6CC-2330-44E9-9905-28BE8BC653E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67ADA6CC-2330-44E9-9905-28BE8BC653E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57E5E243-318E-42AA-8262-C089EC2765C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57E5E243-318E-42AA-8262-C089EC2765C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57E5E243-318E-42AA-8262-C089EC2765C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57E5E243-318E-42AA-8262-C089EC2765C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
