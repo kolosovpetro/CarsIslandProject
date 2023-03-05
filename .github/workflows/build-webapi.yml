@@ -77,5 +77,5 @@ jobs:
       - name: Drop Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.ArtifactName }}
+          name: '${{ env.ArtifactName }}-${{ matrix.environment }}'
           path: ${{ env.ArtifactPath }}
