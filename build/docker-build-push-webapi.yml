@@ -14,7 +14,7 @@ variables:
 
 stages:
   - stage: "docker_webapi_build_push"
-    displayName: "Docker web API build push"
+    displayName: "Docker Web API build push"
     jobs:
       - job: Build_Push_Docker_Image
         displayName: "Build push docker image"

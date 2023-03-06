@@ -1,82 +1,66 @@
 trigger: none
 
 variables:
-  - name: location
-    value: 'westus'
-  - name: rgNameDev
-    value: 'rg-cars-island-dev'
-  - name: rgNameQa
-    value: 'rg-cars-island-qa'
-  - name: subscription
-    value: 'f32f6566-8fa0-4198-9c91-a3b8ac69e89a'
+  - name: acrName
+    value: 'carsislandacr'
+  - name: acrUrl
+    value: 'carsislandacr.azurecr.io'
+  - name: acrRepository
+    value: 'cars-island-web-app'
+  - name: image
+    value: 'cars-web-app'
+  - name: dockerFilePath
+    value: './src/cars-island-web-app'
 
 stages:
-  - stage: "dev"
-    displayName: "Deploy ARM to DEV environment"
+  - stage: "docker_webapp_build_push"
+    displayName: "Docker Web App build push"
     jobs:
-      - deployment: Deploy_ARM_Dev
-        displayName: "Deploy ARM Dev"
+      - job: Build_Push_Docker_Image
+        displayName: "Build push docker image"
         pool:
           vmImage: "ubuntu-latest"
-        environment: dev
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - checkout: self
-                  fetchDepth: 0
+        steps:
+          - checkout: self
+            fetchDepth: 0
 
-                - task: AzureResourceManagerTemplateDeployment@3
-                  displayName: 'ARM Template deployment: resource group'
-                  inputs:
-                    deploymentScope: 'Subscription'
-                    azureResourceManagerConnection: 'CarsIslandAzureConnection'
-                    subscriptionId: '$(subscription)'
-                    location: '$(location)'
-                    csmFile: '$(System.DefaultWorkingDirectory)/arm-templates/rg-azure-deploy.json'
-                    csmParametersFile: '$(System.DefaultWorkingDirectory)/arm-templates/rg-azure-deploy.parameters.dev.json'
+          - task: gitversion/setup@0
+            displayName: 'GitVersion Setup'
+            inputs:
+              versionSpec: '5.9.x'
 
-                - task: AzureResourceManagerTemplateDeployment@3
-                  displayName: 'ARM Template deployment'
-                  inputs:
-                    azureResourceManagerConnection: CarsIslandAzureConnection
-                    subscriptionId: '$(subscription)'
-                    resourceGroupName: '$(rgNameDev)'
-                    location: '$(location)'
-                    csmFile: '$(System.DefaultWorkingDirectory)/arm-templates/template.json'
-                    csmParametersFile: '$(System.DefaultWorkingDirectory)/arm-templates/parameters.dev.json'
-                    
-  - stage: "qa"
-    displayName: "Deploy ARM to QA environment"
-    jobs:
-      - deployment: Deploy_ARM_Qa
-        displayName: "Deploy ARM Qa"
-        pool:
-          vmImage: "ubuntu-latest"
-        environment: qa
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - checkout: self
-                  fetchDepth: 0
+          - task: gitversion/execute@0
+            displayName: 'GitVersion Execute'
+            inputs:
+              updateAssemblyInfo: true
 
-                - task: AzureResourceManagerTemplateDeployment@3
-                  displayName: 'ARM Template deployment: resource group'
-                  inputs:
-                    deploymentScope: 'Subscription'
-                    azureResourceManagerConnection: 'CarsIslandAzureConnection'
-                    subscriptionId: '$(subscription)'
-                    location: '$(location)'
-                    csmFile: '$(System.DefaultWorkingDirectory)/arm-templates/rg-azure-deploy.json'
-                    csmParametersFile: '$(System.DefaultWorkingDirectory)/arm-templates/rg-azure-deploy.parameters.qa.json'
+          - bash: echo $Action$BuildVersion
+            displayName: 'Set Build Version'
+            env:
+              Action: '##vso[build.updatebuildnumber]'
+              BuildVersion: $(GitVersion.SemVer)
 
-                - task: AzureResourceManagerTemplateDeployment@3
-                  displayName: 'ARM Template deployment'
-                  inputs:
-                    azureResourceManagerConnection: CarsIslandAzureConnection
-                    subscriptionId: '$(subscription)'
-                    resourceGroupName: '$(rgNameQa)'
-                    location: '$(location)'
-                    csmFile: '$(System.DefaultWorkingDirectory)/arm-templates/template.json'
-                    csmParametersFile: '$(System.DefaultWorkingDirectory)/arm-templates/parameters.qa.json'
+          - bash: |
+              IMAGE_FULL_NAME="$ACR_URL/$ACR_REPOSITORY:$IMAGE-$VERSION"
+              echo "Image full name: $IMAGE_FULL_NAME"
+              docker build -t "$IMAGE_FULL_NAME" "$DOCKERFILE_PATH"
+            env:
+              ACR_URL: $(acrUrl)
+              ACR_REPOSITORY: $(acrRepository)
+              IMAGE: $(image)
+              VERSION: $(GitVersion.SemVer)
+              DOCKERFILE_PATH: $(dockerFilePath)
+            displayName: 'Build Docker Image'
+
+          - bash: docker images
+            displayName: 'List Docker Images'
+
+          - task: AzureCLI@2
+            displayName: 'Push image to ACR'
+            inputs:
+              azureSubscription: 'CarsIslandACR_SP_Service_connection'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                az acr login --name "$(acrName)"
+                docker image push -a "$(acrUrl)/$(acrRepository)"
