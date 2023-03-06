@@ -1,10 +1,12 @@
 trigger: none
 
 variables:
+  - name: acrUrl
+    value: 'carsislandacr.azurecr.io'
   - name: acrRepository
-    value: cars-island-web-api
+    value: 'cars-island-web-api'
   - name: image
-    value: cars-web-api
+    value: 'cars-web-api'
 
 stages:
   - stage: "docker_webapi_build_push"
@@ -35,22 +37,29 @@ stages:
               BuildVersion: $(GitVersion.SemVer)
 
           - bash: |
-              imageFullName="$(acrRepository):$(image)-$(GitVersion.SemVer)"
+              imageFullName="$ACR_URL/$ACR_REPOSITORY:$IMAGE-$VERSION"
               echo "Image full name: $imageFullName"
               docker build -t "$imageFullName" "./src/cars-island-web-api"
+            env:
+              ACR_URL: $(acrUrl)
+              ACR_REPOSITORY: $(acrRepository)
+              IMAGE: $(image)
+              VERSION: $(GitVersion.SemVer)
             displayName: 'Build Docker Image'
 
           - bash: docker images
             displayName: 'List Docker Images'
-            
+
           - task: AzureCLI@2
+            displayName: 'Push image to ACR'
             inputs:
-              azureSubscription: 'CarsIslandACR_SP_Service_connection' 
+              azureSubscription: 'CarsIslandACR_SP_Service_connection'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
                 az acr login --name "carsislandacr"
-            
+                docker image push -a "$(acrUrl)/$(acrRepository)"
+
 #          - task: Docker@2
 #            displayName: Login to ACR
 #            inputs:
