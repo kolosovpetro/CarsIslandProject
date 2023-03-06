@@ -38,3 +38,7 @@ stages:
               imageFullName="$(acrRepository):$(image)-$(GitVersion.SemVer)"
               echo "Image full name: $imageFullName"
               docker build -t "$imageFullName" "./src/cars-island-web-api"
+            displayName: 'Build Docker Image'
+
+          - bash: docker images
+            displayName: 'List Docker Images'
