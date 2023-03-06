@@ -1,12 +1,16 @@
 trigger: none
 
 variables:
+  - name: acrName
+    value: 'carsislandacr'
   - name: acrUrl
     value: 'carsislandacr.azurecr.io'
   - name: acrRepository
     value: 'cars-island-web-api'
   - name: image
     value: 'cars-web-api'
+  - name: dockerFilePath
+    value: 'src/cars-island-web-api/Dockerfile'
 
 stages:
   - stage: "docker_webapi_build_push"
@@ -37,14 +41,15 @@ stages:
               BuildVersion: $(GitVersion.SemVer)
 
           - bash: |
-              imageFullName="$ACR_URL/$ACR_REPOSITORY:$IMAGE-$VERSION"
-              echo "Image full name: $imageFullName"
-              docker build -t "$imageFullName" "./src/cars-island-web-api"
+              IMAGE_FULL_NAME="$ACR_URL/$ACR_REPOSITORY:$IMAGE-$VERSION"
+              echo "Image full name: $IMAGE_FULL_NAME"
+              docker build -t "$IMAGE_FULL_NAME" "$DOCKERFILE_PATH"
             env:
               ACR_URL: $(acrUrl)
               ACR_REPOSITORY: $(acrRepository)
               IMAGE: $(image)
               VERSION: $(GitVersion.SemVer)
+              DOCKERFILE_PATH: $(dockerFilePath)
             displayName: 'Build Docker Image'
 
           - bash: docker images
@@ -57,22 +62,5 @@ stages:
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
-                az acr login --name "carsislandacr"
+                az acr login --name "$(acrName)"
                 docker image push -a "$(acrUrl)/$(acrRepository)"
-
-#          - task: Docker@2
-#            displayName: Login to ACR
-#            inputs:
-#              command: login
-#              containerRegistry: 'CarsIslandACR_SP_Service_connection'
-#              
-#          - task: Docker@2
-#            displayName: Build and Push
-#            inputs:
-#              command: buildAndPush
-#              Dockerfile: 'src/cars-island-web-api/Dockerfile'
-#              containerRegistry: 'CarsIslandACR_SP_Service_connection'
-#              repository: '$(acrRepository)'
-#              tags: |
-#                $(GitVersion.SemVer)
-#                latest
