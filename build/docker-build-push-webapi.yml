@@ -10,7 +10,7 @@ variables:
   - name: image
     value: 'cars-web-api'
   - name: dockerFilePath
-    value: 'src/cars-island-web-api/Dockerfile'
+    value: './src/cars-island-web-api'
 
 stages:
   - stage: "docker_webapi_build_push"
