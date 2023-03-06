@@ -43,19 +43,27 @@ stages:
           - bash: docker images
             displayName: 'List Docker Images'
             
-          - task: Docker@2
-            displayName: Login to ACR
+          - task: AzureCLI@2
             inputs:
-              command: login
-              containerRegistry: 'CarsIslandACR_SP_Service_connection'
-              
-          - task: Docker@2
-            displayName: Build and Push
-            inputs:
-              command: buildAndPush
-              Dockerfile: 'src/cars-island-web-api/Dockerfile'
-              containerRegistry: 'CarsIslandACR_SP_Service_connection'
-              repository: '$(acrRepository)'
-              tags: |
-                $(GitVersion.SemVer)
-                latest
+              azureSubscription: 'CarsIslandACR_SP_Service_connection' 
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                az acr login --name "carsislandacr"
+            
+#          - task: Docker@2
+#            displayName: Login to ACR
+#            inputs:
+#              command: login
+#              containerRegistry: 'CarsIslandACR_SP_Service_connection'
+#              
+#          - task: Docker@2
+#            displayName: Build and Push
+#            inputs:
+#              command: buildAndPush
+#              Dockerfile: 'src/cars-island-web-api/Dockerfile'
+#              containerRegistry: 'CarsIslandACR_SP_Service_connection'
+#              repository: '$(acrRepository)'
+#              tags: |
+#                $(GitVersion.SemVer)
+#                latest
