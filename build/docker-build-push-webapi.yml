@@ -1,0 +1,40 @@
+trigger: none
+
+variables:
+  - name: acrRepository
+    value: cars-island-web-api
+  - name: image
+    value: cars-web-api
+
+stages:
+  - stage: "docker_webapi_build_push"
+    displayName: "Docker web API build push"
+    jobs:
+      - job: Build_Push_Docker_Image
+        displayName: "Build push docker image"
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - checkout: self
+            fetchDepth: 0
+
+          - task: gitversion/setup@0
+            displayName: 'GitVersion Setup'
+            inputs:
+              versionSpec: '5.9.x'
+
+          - task: gitversion/execute@0
+            displayName: 'GitVersion Execute'
+            inputs:
+              updateAssemblyInfo: true
+
+          - bash: echo $Action$BuildVersion
+            displayName: 'Set Build Version'
+            env:
+              Action: '##vso[build.updatebuildnumber]'
+              BuildVersion: $(GitVersion.SemVer)
+
+          - bash: |
+              $imageFullName="$(acrRepository):$(image)-$(GitVersion.SemVer)"
+              echo "Image full name: $imageFullName"
+              docker build -t "$imageFullName" "./src/cars-island-web-api"

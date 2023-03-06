@@ -68,6 +68,13 @@ Web App Screen:
     - `az cosmosdb sql database create --account-name "cosmos-acc-car-island" --resource-group "rg-car-rental-solution" --name "azuredevtemplatesdb"`
     - `az cosmosdb sql container create -g "rg-car-rental-solution" -a "cosmos-acc-car-island" -d "azuredevtemplatesdb" -n "products" --partition-key-path "/id"`
 
+- **Create ACR**
+    - `az acr create --resource-group "rg-car-rental-solution" --name "carsislandacr" --sku "Basic"`
+
+- **Create ACR Service Principal**
+    - `$ACR_REGISTRY_ID=$(az acr show --name "carsislandacr" --query "id" --output tsv)`
+    - `az ad sp create-for-rbac --name "CarsIslandACR_SP" --scopes $ACR_REGISTRY_ID --role acrpush`
+
 - **Create Blob Container**
     - `az storage account create --name "carislandstorage1" --resource-group "rg-car-rental-solution" --location "westus" --sku "Standard_LRS" --kind "StorageV2"`
     - `az storage container create --name "cars-images-container" --account-name "carislandstorage1" --public-access "blob"`
