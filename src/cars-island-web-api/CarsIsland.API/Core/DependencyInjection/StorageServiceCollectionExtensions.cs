@@ -1,5 +1,4 @@
-﻿using Azure;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using CarsIsland.Infrastructure.Configuration.Interfaces;
 using CarsIsland.Infrastructure.Services;
 using CarsIsland.Infrastructure.Services.Interfaces;

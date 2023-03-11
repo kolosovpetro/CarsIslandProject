@@ -13,107 +13,106 @@ using Polly.Extensions.Http;
 using System;
 using System.Net.Http;
 
-namespace CarsIsland.WebApp
+namespace CarsIsland.WebApp;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        Configuration = configuration;
+    }
 
-        private IConfiguration Configuration { get; }
+    private IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddRazorPages();
-            services.AddServerSideBlazor();
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddRazorPages();
+        services.AddServerSideBlazor();
 
-            var apiAddress = Configuration.TryGetFromEnv(ConfigConstants.ApiAddress);
+        var apiAddress = Configuration.TryGetFromEnv(ConfigConstants.ApiAddress);
 
-            services
-                .AddHttpClient<ICarsIslandApiService, CarsIslandApiService>(configureClient
-                    => configureClient.BaseAddress = new Uri(apiAddress))
-                .AddPolicyHandler(GetRetryPolicy(services))
-                .AddPolicyHandler(GetCircuitBreakerPolicy(services));
+        services
+            .AddHttpClient<ICarsIslandApiService, CarsIslandApiService>(configureClient
+                => configureClient.BaseAddress = new Uri(apiAddress))
+            .AddPolicyHandler(GetRetryPolicy(services))
+            .AddPolicyHandler(GetCircuitBreakerPolicy(services));
 
 
-            services.AddScoped<CarDataService>();
-            services.AddScoped<EnquiryDataService>();
+        services.AddScoped<CarDataService>();
+        services.AddScoped<EnquiryDataService>();
 
-            var blobAddress = Configuration.TryGetFromEnv(ConfigConstants.BlobServerAddress);
+        var blobAddress = Configuration.TryGetFromEnv(ConfigConstants.BlobServerAddress);
 
-            var blobConfig = new BlobConfiguration(blobAddress);
+        var blobConfig = new BlobConfiguration(blobAddress);
 
-            services.AddSingleton(blobConfig);
-        }
+        services.AddSingleton(blobConfig);
+    }
 
-        private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(IServiceCollection services)
-        {
-            return HttpPolicyExtensions
-                // Handle HttpRequestExceptions, 408 and 5xx status codes:
-                .HandleTransientHttpError()
-                // Handle 404 not found
-                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
-                // Retry 3 times, each time wait 2, 4 and 8 seconds before retrying:
-                .WaitAndRetryAsync(new[] { TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(4), TimeSpan.FromSeconds(8) },
-                    onRetry: (_, timespan, retryAttempt, _) =>
-                    {
-                        services.BuildServiceProvider()
-                            .GetRequiredService<ILogger<CarsIslandApiService>>()?
-                            .LogError("Delaying for {delay}ms, then making retry: {retry}.", timespan.TotalMilliseconds,
-                                retryAttempt);
-                    });
-        }
-
-        private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(IServiceCollection services)
-        {
+    private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(IServiceCollection services)
+    {
+        return HttpPolicyExtensions
             // Handle HttpRequestExceptions, 408 and 5xx status codes:
-            return HttpPolicyExtensions
-                .HandleTransientHttpError()
-                .CircuitBreakerAsync(3, TimeSpan.FromSeconds(10),
-                    onBreak: (_, timeSpan, _) =>
-                    {
-                        services.BuildServiceProvider()
-                            .GetRequiredService<ILogger<CarsIslandApiService>>()?
-                            .LogError("CircuitBreaker onBreak for {delay}ms", timeSpan.TotalMilliseconds);
-                    },
-                    onReset: _ =>
-                    {
-                        services.BuildServiceProvider()
-                            .GetRequiredService<ILogger<CarsIslandApiService>>()?
-                            .LogError("CircuitBreaker closed again");
-                    },
-                    onHalfOpen: () =>
-                    {
-                        services.BuildServiceProvider()
-                            .GetRequiredService<ILogger<CarsIslandApiService>>()?
-                            .LogError("CircuitBreaker onHalfOpen");
-                    });
-        }
+            .HandleTransientHttpError()
+            // Handle 404 not found
+            .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+            // Retry 3 times, each time wait 2, 4 and 8 seconds before retrying:
+            .WaitAndRetryAsync(new[] { TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(4), TimeSpan.FromSeconds(8) },
+                onRetry: (_, timespan, retryAttempt, _) =>
+                {
+                    services.BuildServiceProvider()
+                        .GetRequiredService<ILogger<CarsIslandApiService>>()?
+                        .LogError("Delaying for {delay}ms, then making retry: {retry}.", timespan.TotalMilliseconds,
+                            retryAttempt);
+                });
+    }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(IServiceCollection services)
+    {
+        // Handle HttpRequestExceptions, 408 and 5xx status codes:
+        return HttpPolicyExtensions
+            .HandleTransientHttpError()
+            .CircuitBreakerAsync(3, TimeSpan.FromSeconds(10),
+                onBreak: (_, timeSpan, _) =>
+                {
+                    services.BuildServiceProvider()
+                        .GetRequiredService<ILogger<CarsIslandApiService>>()?
+                        .LogError("CircuitBreaker onBreak for {delay}ms", timeSpan.TotalMilliseconds);
+                },
+                onReset: _ =>
+                {
+                    services.BuildServiceProvider()
+                        .GetRequiredService<ILogger<CarsIslandApiService>>()?
+                        .LogError("CircuitBreaker closed again");
+                },
+                onHalfOpen: () =>
+                {
+                    services.BuildServiceProvider()
+                        .GetRequiredService<ILogger<CarsIslandApiService>>()?
+                        .LogError("CircuitBreaker onHalfOpen");
+                });
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapBlazorHub();
-                endpoints.MapFallbackToPage("/_Host");
-            });
+            app.UseDeveloperExceptionPage();
         }
+        else
+        {
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapBlazorHub();
+            endpoints.MapFallbackToPage("/_Host");
+        });
     }
 }
