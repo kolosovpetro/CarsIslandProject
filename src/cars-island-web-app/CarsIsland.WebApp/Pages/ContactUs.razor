@@ -27,9 +27,9 @@
     </b>
     <InputText id="contactEmail" @bind-Value="_contactFormModel.CustomerContactEmail"/>
     <br/>
-    @* <br/> *@
-    @* <InputFile OnChange="@HandleFileSelected"/> *@
-    @* <br/> *@
+    <br/>
+    <InputFile OnChange="@HandleFileSelected"/>
+    <br/>
     <br/>
     <p>File name: @_contactFormModel.AttachmentFileName</p>
     <br/>
@@ -56,7 +56,13 @@
         _contactFormModel.Title = string.Empty;
         _contactFormModel.Content = string.Empty;
         _contactFormModel.CustomerContactEmail = string.Empty;
+        _contactFormModel.AttachmentFileName = string.Empty;
         _showConfirmation = true;
     }
 
+    private void HandleFileSelected(InputFileChangeEventArgs files)
+    {
+        _contactFormModel.Attachment = files.GetMultipleFiles().First().OpenReadStream(maxAllowedSize: 1024 * 1024);
+        _contactFormModel.AttachmentFileName = files.GetMultipleFiles().First().Name;
+    }
 }
