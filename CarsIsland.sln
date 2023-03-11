@@ -62,6 +62,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cars", "cars", "{8948E160-4
 		img\cars\mercedes-car-image.jpg = img\cars\mercedes-car-image.jpg
 		img\cars\mercedes-car-img.png = img\cars\mercedes-car-img.png
 		img\cars\smart-car-image.jpg = img\cars\smart-car-image.jpg
+		img\cars\CarsIslandAKSDiagram.png = img\cars\CarsIslandAKSDiagram.png
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{C2E13CC7-5AAA-4E2E-B10D-E54C38D23459}"
@@ -103,6 +104,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsIsland.Infrastructure", "src\cars-island-web-api\CarsIsland.Infrastructure\CarsIsland.Infrastructure.csproj", "{67ADA6CC-2330-44E9-9905-28BE8BC653E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsIsland.WebApp", "src\cars-island-web-app\CarsIsland.WebApp\CarsIsland.WebApp.csproj", "{57E5E243-318E-42AA-8262-C089EC2765C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kubernetes", "kubernetes", "{734D822C-9340-4803-819A-128DA84C5CB1}"
+	ProjectSection(SolutionItems) = preProject
+		kubernetes\README.md = kubernetes\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
