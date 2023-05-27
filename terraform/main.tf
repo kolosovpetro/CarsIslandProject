@@ -12,3 +12,14 @@ module "acr" {
   acr_resource_group_name = azurerm_resource_group.public.name
   acr_sku                 = var.acr_sku
 }
+
+module "key_vault" {
+  source                               = "./modules/key-vault"
+  key_vault_location                   = azurerm_resource_group.public.location
+  key_vault_name                       = var.key_vault_name
+  key_vault_object_id                  = data.azurerm_client_config.current.object_id
+  key_vault_resource_group_name        = azurerm_resource_group.public.name
+  key_vault_sku_name                   = var.key_vault_sku_name
+  key_vault_soft_delete_retention_days = 7
+  key_vault_tenant_id                  = data.azurerm_client_config.current.tenant_id
+}

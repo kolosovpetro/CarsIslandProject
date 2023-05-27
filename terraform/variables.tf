@@ -22,3 +22,13 @@ variable "acr_sku" {
   type        = string
   description = "Azure Container Registry SKU"
 }
+
+variable "key_vault_name" {
+  description = "The name of the key vault"
+  type        = string
+}
+
+variable "key_vault_sku_name" {
+  description = "The sku name of the key vault"
+  type        = string
+}
