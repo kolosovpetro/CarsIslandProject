@@ -2,6 +2,8 @@ trigger: none
 
 variables:
   - group: 'CarsIsland-Docker-Variables'
+  - name: System.Debug
+    value: 'true'
 
 stages:
   - stage: "validate_docker_compose"
@@ -25,11 +27,25 @@ stages:
           - bash: |
               docker compose build
             displayName: 'Build Docker Compose'
+            env:
+              BlobAccountName: $(BlobAccountName)
+              BlobConnectionString: $(BlobConnectionString)
+              BlobContainerName: $(BlobContainerName)
+              BlobKey: $(BlobKey)
+              BlobServerAddress: $(BlobServerAddress)
+              CosmosConnectionString: $(CosmosConnectionString)
 
           - bash: |
               docker compose up -d
             displayName: 'Run Docker Compose'
-            
+            env:
+              BlobAccountName: $(BlobAccountName)
+              BlobConnectionString: $(BlobConnectionString)
+              BlobContainerName: $(BlobContainerName)
+              BlobKey: $(BlobKey)
+              BlobServerAddress: $(BlobServerAddress)
+              CosmosConnectionString: $(CosmosConnectionString)
+
           - bash: sleep 30
             displayName: 'Wait for Docker Compose'
 
