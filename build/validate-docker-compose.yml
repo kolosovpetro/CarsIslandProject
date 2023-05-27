@@ -29,6 +29,9 @@ stages:
           - bash: |
               docker compose up -d
             displayName: 'Run Docker Compose'
+            
+          - bash: sleep 30
+            displayName: 'Wait for Docker Compose'
 
           - bash: |
               curl http://localhost:8080/api/Car/all
