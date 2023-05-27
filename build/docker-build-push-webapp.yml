@@ -19,6 +19,13 @@ stages:
         steps:
           - checkout: self
             fetchDepth: 0
+            
+          - task: AzureKeyVault@2
+            inputs:
+              azureSubscription: 'CarsIslandACR_SP_Service_connection'
+              KeyVaultName: '$(KeyVaultName)' # inside variables group
+              SecretsFilter: "*"
+              RunAsPreJob: false
 
           - task: gitversion/setup@0
             displayName: 'GitVersion Setup'
