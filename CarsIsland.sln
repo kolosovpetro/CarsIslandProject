@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{AC841180
 		build\azure-pipelines-arm-deploy.yml = build\azure-pipelines-arm-deploy.yml
 		build\docker-build-push-webapi.yml = build\docker-build-push-webapi.yml
 		build\docker-build-push-webapp.yml = build\docker-build-push-webapp.yml
+		build\validate-docker-compose.yml = build\validate-docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cert", "cert", "{C25A6022-9553-4D34-B4E8-46658C5574C5}"
