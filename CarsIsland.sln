@@ -150,6 +150,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cosmos", "cosmos", "{03FFE3
 		terraform\modules\cosmos\variables.tf = terraform\modules\cosmos\variables.tf
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "keyvault-secrets", "keyvault-secrets", "{5D16EC7C-A4B3-4F68-9211-E067CD72009A}"
+	ProjectSection(SolutionItems) = preProject
+		terraform\modules\keyvault-secrets\main.tf = terraform\modules\keyvault-secrets\main.tf
+		terraform\modules\keyvault-secrets\variables.tf = terraform\modules\keyvault-secrets\variables.tf
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -172,6 +178,7 @@ Global
 		{ABD70DEB-35A7-4921-AE99-B3EC1F604EB3} = {CB78FCFB-881F-486A-A66D-97951ED1D9C8}
 		{E2FE0221-3668-4E1B-A10A-0AEE666803AC} = {CB78FCFB-881F-486A-A66D-97951ED1D9C8}
 		{03FFE354-922C-4FEE-812F-9B45A67BBAE7} = {CB78FCFB-881F-486A-A66D-97951ED1D9C8}
+		{5D16EC7C-A4B3-4F68-9211-E067CD72009A} = {CB78FCFB-881F-486A-A66D-97951ED1D9C8}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2747554D-9169-411E-8962-204FBFB93833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

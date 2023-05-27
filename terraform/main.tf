@@ -43,3 +43,22 @@ module "cosmos" {
   cosmos_offer_type          = var.cosmos_offer_type
   cosmos_resource_group_name = azurerm_resource_group.public.name
 }
+
+module "keyvault-secrets" {
+  source                    = "./modules/keyvault-secrets"
+  cosmos_connection_string  = module.cosmos.cosmos_connection_string
+  keyvault_id               = module.key_vault.key_vault_id
+  storage_account_name      = module.storage.storage_account_name
+  storage_connection_string = module.storage.storage_connection_string
+  storage_container_name    = module.storage.storage_container_name
+  storage_primary_key       = module.storage.storage_primary_key
+
+  depends_on = [
+    module.cosmos.cosmos_connection_string,
+    module.key_vault.key_vault_id,
+    module.storage.storage_account_name,
+    module.storage.storage_connection_string,
+    module.storage.storage_container_name,
+    module.storage.storage_primary_key,
+  ]
+}
