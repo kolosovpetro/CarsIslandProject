@@ -31,3 +31,13 @@ variable "storage_access_url" {
   type        = string
   description = "The URL for the storage account"
 }
+
+variable "acr_name" {
+  type        = string
+  description = "The name of the Azure Container Registry"
+}
+
+variable "acr_url" {
+  type        = string
+  description = "The URL of the Azure Container Registry"
+}

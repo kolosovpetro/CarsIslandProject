@@ -53,6 +53,8 @@ module "keyvault-secrets" {
   storage_container_name    = module.storage.storage_container_name
   storage_primary_key       = module.storage.storage_primary_key
   storage_access_url        = module.storage.storage_access_url
+  acr_name                  = module.acr.acr_name
+  acr_url                   = module.acr.acr_url
 
   depends_on = [
     module.cosmos.cosmos_connection_string,
@@ -61,6 +63,8 @@ module "keyvault-secrets" {
     module.storage.storage_connection_string,
     module.storage.storage_container_name,
     module.storage.storage_primary_key,
-    module.storage.storage_access_url
+    module.storage.storage_access_url,
+    module.acr.acr_name,
+    module.acr.acr_url
   ]
 }

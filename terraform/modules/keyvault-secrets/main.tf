@@ -34,3 +34,15 @@ resource "azurerm_key_vault_secret" "storage_access_url" {
   key_vault_id = var.keyvault_id
 }
 
+resource "azurerm_key_vault_secret" "acr_name" {
+  name         = "acrName"
+  value        = var.acr_name
+  key_vault_id = var.keyvault_id
+}
+
+resource "azurerm_key_vault_secret" "acr_url" {
+  name         = "acrUrl"
+  value        = var.acr_url
+  key_vault_id = var.keyvault_id
+}
+
