@@ -143,6 +143,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "storage", "storage", "{E2FE
 		terraform\modules\storage\variables.tf = terraform\modules\storage\variables.tf
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cosmos", "cosmos", "{03FFE354-922C-4FEE-812F-9B45A67BBAE7}"
+	ProjectSection(SolutionItems) = preProject
+		terraform\modules\cosmos\main.tf = terraform\modules\cosmos\main.tf
+		terraform\modules\cosmos\output.tf = terraform\modules\cosmos\output.tf
+		terraform\modules\cosmos\variables.tf = terraform\modules\cosmos\variables.tf
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -164,6 +171,7 @@ Global
 		{E0DB2154-68B5-44DF-8458-FE0957176A7D} = {CB78FCFB-881F-486A-A66D-97951ED1D9C8}
 		{ABD70DEB-35A7-4921-AE99-B3EC1F604EB3} = {CB78FCFB-881F-486A-A66D-97951ED1D9C8}
 		{E2FE0221-3668-4E1B-A10A-0AEE666803AC} = {CB78FCFB-881F-486A-A66D-97951ED1D9C8}
+		{03FFE354-922C-4FEE-812F-9B45A67BBAE7} = {CB78FCFB-881F-486A-A66D-97951ED1D9C8}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2747554D-9169-411E-8962-204FBFB93833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

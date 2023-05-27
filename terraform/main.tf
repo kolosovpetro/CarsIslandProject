@@ -33,3 +33,13 @@ module "storage" {
   storage_account_replication = var.storage_account_replication
   storage_account_tier        = var.storage_account_tier
 }
+
+module "cosmos" {
+  source                     = "./modules/cosmos"
+  cosmos_account_name        = "${var.cosmos_account_name}${var.prefix}"
+  cosmos_consistency_level   = var.cosmos_consistency_level
+  cosmos_kind                = var.cosmos_kind
+  cosmos_location            = azurerm_resource_group.public.location
+  cosmos_offer_type          = var.cosmos_offer_type
+  cosmos_resource_group_name = azurerm_resource_group.public.name
+}

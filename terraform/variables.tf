@@ -45,12 +45,30 @@ variable "storage_container_name" {
 
 variable "storage_account_tier" {
   type        = string
-  #  default     = "Standard"
   description = "Messenger storage account tier"
 }
 
 variable "storage_account_replication" {
   type        = string
-  #  default = "LRS"
   description = "Messenger storage account replication strategy"
+}
+
+variable "cosmos_account_name" {
+  type        = string
+  description = "Cosmos account name"
+}
+
+variable "cosmos_offer_type" {
+  type        = string
+  description = "Cosmos account offer type"
+}
+
+variable "cosmos_kind" {
+  type        = string
+  description = "Cosmos account kind"
+}
+
+variable "cosmos_consistency_level" {
+  type        = string
+  description = "Cosmos account consistency level"
 }
