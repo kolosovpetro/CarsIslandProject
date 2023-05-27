@@ -28,3 +28,9 @@ resource "azurerm_key_vault_secret" "storage_container_name" {
   key_vault_id = var.keyvault_id
 }
 
+resource "azurerm_key_vault_secret" "storage_access_url" {
+  name         = "BlobServerAddress"
+  value        = var.storage_access_url
+  key_vault_id = var.keyvault_id
+}
+

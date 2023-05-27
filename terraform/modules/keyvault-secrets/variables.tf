@@ -26,3 +26,8 @@ variable "storage_container_name" {
   type        = string
   description = "The name of the storage container"
 }
+
+variable "storage_access_url" {
+  type        = string
+  description = "The URL for the storage account"
+}
