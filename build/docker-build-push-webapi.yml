@@ -2,12 +2,6 @@ trigger: none
 
 variables:
   - group: 'CarsIsland-Docker-Variables'
-#  - name: acrApiRepository
-#    value: 'cars-island-web-api'
-#  - name: acrApiImage
-#    value: 'cars-web-api'
-#  - name: apiDockerFilePath
-#    value: './src/cars-island-web-api'
 
 stages:
   - stage: "docker_webapi_build_push"

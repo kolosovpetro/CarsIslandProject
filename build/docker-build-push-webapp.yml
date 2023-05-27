@@ -1,16 +1,12 @@
 trigger: none
 
 variables:
-  - name: acrName
-    value: 'carsislandacr'
-  - name: acrUrl
-    value: 'carsislandacr.azurecr.io'
-  - name: acrRepository
-    value: 'cars-island-web-app'
-  - name: image
-    value: 'cars-web-app'
-  - name: dockerFilePath
-    value: './src/cars-island-web-app'
+#  - name: acrAppRepository
+#    value: 'cars-island-web-app'
+#  - name: acrAppImage
+#    value: 'cars-web-app'
+#  - name: appDockerFilePath
+#    value: './src/cars-island-web-app'
 
 stages:
   - stage: "docker_webapp_build_push"
@@ -46,10 +42,10 @@ stages:
               docker build -t "$IMAGE_FULL_NAME" "$DOCKERFILE_PATH"
             env:
               ACR_URL: $(acrUrl)
-              ACR_REPOSITORY: $(acrRepository)
-              IMAGE: $(image)
+              ACR_REPOSITORY: $(acrAppRepository)
+              IMAGE: $(acrAppImage)
               VERSION: $(GitVersion.SemVer)
-              DOCKERFILE_PATH: $(dockerFilePath)
+              DOCKERFILE_PATH: $(appDockerFilePath)
             displayName: 'Build Docker Image'
 
           - bash: docker images
@@ -63,4 +59,4 @@ stages:
               scriptLocation: 'inlineScript'
               inlineScript: |
                 az acr login --name "$(acrName)"
-                docker image push -a "$(acrUrl)/$(acrRepository)"
+                docker image push -a "$(acrUrl)/$(acrAppRepository)"
