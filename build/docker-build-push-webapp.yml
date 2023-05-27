@@ -1,6 +1,7 @@
 trigger: none
 
 variables:
+  - group: 'CarsIsland-Docker-Variables'
 #  - name: acrAppRepository
 #    value: 'cars-island-web-app'
 #  - name: acrAppImage
