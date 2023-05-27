@@ -31,5 +31,13 @@ stages:
             displayName: 'Run Docker Compose'
 
           - bash: |
+              curl http://localhost:8080/api/Car/all
+            displayName: 'Validate API'
+
+          - bash: |
+              curl http://localhost:8003/carscatalog
+            displayName: 'Validate Web App'
+
+          - bash: |
               docker compose down
             displayName: 'Stop Docker Compose'
