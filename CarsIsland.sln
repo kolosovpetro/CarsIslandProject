@@ -111,6 +111,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kubernetes", "kubernetes", 
 		kubernetes\README.md = kubernetes\README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "terraform", "terraform", "{50DCF6E6-A8E5-4221-B09C-CE83BB3B6941}"
+	ProjectSection(SolutionItems) = preProject
+		terraform\main.tf = terraform\main.tf
+		terraform\provider.tf = terraform\provider.tf
+		terraform\variables.tf = terraform\variables.tf
+		terraform\versions.tf = terraform\versions.tf
+		terraform\terraform.auto.tfvars.json = terraform\terraform.auto.tfvars.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{CB78FCFB-881F-486A-A66D-97951ED1D9C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "container-registry", "container-registry", "{E0DB2154-68B5-44DF-8458-FE0957176A7D}"
+	ProjectSection(SolutionItems) = preProject
+		terraform\modules\container-registry\main.tf = terraform\modules\container-registry\main.tf
+		terraform\modules\container-registry\output.tf = terraform\modules\container-registry\output.tf
+		terraform\modules\container-registry\variables.tf = terraform\modules\container-registry\variables.tf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "key-vault", "key-vault", "{ABD70DEB-35A7-4921-AE99-B3EC1F604EB3}"
+	ProjectSection(SolutionItems) = preProject
+		terraform\modules\key-vault\main.tf = terraform\modules\key-vault\main.tf
+		terraform\modules\key-vault\output.tf = terraform\modules\key-vault\output.tf
+		terraform\modules\key-vault\variables.tf = terraform\modules\key-vault\variables.tf
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,6 +153,9 @@ Global
 		{60F7E0D9-78EA-4899-9C93-DBB5D3E10EBD} = {1D1F1CC7-8DC2-44C4-BE98-F322B3FE61E9}
 		{67ADA6CC-2330-44E9-9905-28BE8BC653E1} = {1D1F1CC7-8DC2-44C4-BE98-F322B3FE61E9}
 		{57E5E243-318E-42AA-8262-C089EC2765C9} = {3FD64BF5-CB12-4E7E-AABE-EE62C7BD2765}
+		{CB78FCFB-881F-486A-A66D-97951ED1D9C8} = {50DCF6E6-A8E5-4221-B09C-CE83BB3B6941}
+		{E0DB2154-68B5-44DF-8458-FE0957176A7D} = {CB78FCFB-881F-486A-A66D-97951ED1D9C8}
+		{ABD70DEB-35A7-4921-AE99-B3EC1F604EB3} = {CB78FCFB-881F-486A-A66D-97951ED1D9C8}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2747554D-9169-411E-8962-204FBFB93833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
