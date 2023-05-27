@@ -1,16 +1,13 @@
 trigger: none
 
 variables:
-  - name: acrName
-    value: 'carsislandacr'
-  - name: acrUrl
-    value: 'carsislandacr.azurecr.io'
-  - name: acrRepository
-    value: 'cars-island-web-api'
-  - name: image
-    value: 'cars-web-api'
-  - name: dockerFilePath
-    value: './src/cars-island-web-api'
+  - group: 'CarsIsland-Docker-Variables'
+#  - name: acrApiRepository
+#    value: 'cars-island-web-api'
+#  - name: acrApiImage
+#    value: 'cars-web-api'
+#  - name: apiDockerFilePath
+#    value: './src/cars-island-web-api'
 
 stages:
   - stage: "docker_webapi_build_push"
@@ -23,6 +20,13 @@ stages:
         steps:
           - checkout: self
             fetchDepth: 0
+            
+          - task: AzureKeyVault@2
+            inputs:
+              azureSubscription: 'CarsIslandACR_SP_Service_connection'
+              KeyVaultName: '$(KeyVaultName)' # inside variables group
+              SecretsFilter: "*"
+              RunAsPreJob: false
 
           - task: gitversion/setup@0
             displayName: 'GitVersion Setup'
@@ -46,10 +50,10 @@ stages:
               docker build -t "$IMAGE_FULL_NAME" "$DOCKERFILE_PATH"
             env:
               ACR_URL: $(acrUrl)
-              ACR_REPOSITORY: $(acrRepository)
-              IMAGE: $(image)
+              ACR_REPOSITORY: $(acrApiRepository)
+              IMAGE: $(acrApiImage)
               VERSION: $(GitVersion.SemVer)
-              DOCKERFILE_PATH: $(dockerFilePath)
+              DOCKERFILE_PATH: $(apiDockerFilePath)
             displayName: 'Build Docker Image'
 
           - bash: docker images
@@ -63,4 +67,4 @@ stages:
               scriptLocation: 'inlineScript'
               inlineScript: |
                 az acr login --name "$(acrName)"
-                docker image push -a "$(acrUrl)/$(acrRepository)"
+                docker image push -a "$(acrUrl)/$(acrApiRepository)"
