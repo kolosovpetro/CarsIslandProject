@@ -20,7 +20,7 @@ services:
       - "8003:80"
     
     environment:
-      BlobServerAddress: "https://carislandstorage1.blob.core.windows.net/cars-images-container/"
+      BlobServerAddress: ${BlobServerAddress}
       ApiAddress: "http://api:80"
     depends_on:
       - api

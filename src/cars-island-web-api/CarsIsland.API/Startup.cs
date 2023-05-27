@@ -1,5 +1,5 @@
 using CarsIsland.API.Constants;
-using CarsIsland.API.Core.DependencyInjection;
+using CarsIsland.API.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,8 +19,8 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        var containerName = Configuration.TryGetFromEnv(ConfigConstants.BlobContainerName);
-        
+        var containerName = Configuration[ConfigConstants.BlobContainerName];
+
 
         services.AddAppConfiguration(Configuration)
             .AddDataServices()

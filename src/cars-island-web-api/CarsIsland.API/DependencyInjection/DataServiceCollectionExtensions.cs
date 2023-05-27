@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Azure.Cosmos;
+﻿using Azure.Cosmos;
 using CarsIsland.Core.Entities;
 using CarsIsland.Core.Interfaces;
 using CarsIsland.Infrastructure.Configuration.Interfaces;
 using CarsIsland.Infrastructure.Data;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace CarsIsland.API.Core.DependencyInjection;
+namespace CarsIsland.API.DependencyInjection;
 
 public static class DataServiceCollectionExtensions
 {

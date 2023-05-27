@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace CarsIsland.API.Core.DependencyInjection;
+namespace CarsIsland.API.DependencyInjection;
 
 public static class AppBuilderCollectionExtensions
 {

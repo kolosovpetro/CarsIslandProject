@@ -4,7 +4,7 @@ using CarsIsland.Infrastructure.Services;
 using CarsIsland.Infrastructure.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CarsIsland.API.Core.DependencyInjection;
+namespace CarsIsland.API.DependencyInjection;
 
 public static class StorageServiceCollectionExtensions
 {

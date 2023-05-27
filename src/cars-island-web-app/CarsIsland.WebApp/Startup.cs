@@ -1,4 +1,3 @@
-using CarsIsland.WebApp.Constants;
 using CarsIsland.WebApp.Data;
 using CarsIsland.WebApp.Services;
 using CarsIsland.WebApp.Services.Interfaces;
@@ -12,6 +11,7 @@ using Polly;
 using Polly.Extensions.Http;
 using System;
 using System.Net.Http;
+using static CarsIsland.WebApp.Constants.ConfigConstants;
 
 namespace CarsIsland.WebApp;
 
@@ -29,7 +29,7 @@ public class Startup
         services.AddRazorPages();
         services.AddServerSideBlazor();
 
-        var apiAddress = Configuration.TryGetFromEnv(ConfigConstants.ApiAddress);
+        var apiAddress = Configuration[ApiAddress];
 
         services
             .AddHttpClient<ICarsIslandApiService, CarsIslandApiService>(configureClient
@@ -41,7 +41,7 @@ public class Startup
         services.AddScoped<CarDataService>();
         services.AddScoped<EnquiryDataService>();
 
-        var blobAddress = Configuration.TryGetFromEnv(ConfigConstants.BlobServerAddress);
+        var blobAddress = Configuration[BlobServerAddress];
 
         var blobConfig = new BlobConfiguration(blobAddress);
 

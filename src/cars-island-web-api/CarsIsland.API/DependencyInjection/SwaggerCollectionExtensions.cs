@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace CarsIsland.API.Core.DependencyInjection;
+namespace CarsIsland.API.DependencyInjection;
 
 public static class SwaggerCollectionExtensions
 {
