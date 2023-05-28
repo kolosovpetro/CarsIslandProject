@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: cars-api
-          image: acrcarsislandd01/cars-island-web-api:cars-web-api-0.1.60
+          image: acrcarsislandd01.azurecr.io/cars-island-web-api:cars-web-api-0.1.69
           ports:
             - containerPort: 80
           resources:

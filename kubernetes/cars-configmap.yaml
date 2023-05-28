@@ -6,8 +6,9 @@ metadata:
     app: cars-island
 data:
   CosmosConnectionString: ""
-  BlobAccountName: ""
+  BlobAccountName: "stcarsislandd01"
   BlobKey: ""
-  BlobContainerName: ""
+  BlobContainerName: "carsislandcontainer"
   BlobConnectionString: ""
+  BlobServerAddress: "https://stcarsislandd01.blob.core.windows.net/carsislandcontainer/"
   
