@@ -10,5 +10,4 @@ data:
   BlobKey: ""
   BlobContainerName: "carsislandcontainer"
   BlobConnectionString: ""
-  BlobServerAddress: "https://stcarsislandd01.blob.core.windows.net/carsislandcontainer/"
-  
+  BlobServiceAddress: "https://stcarsislandd01.blob.core.windows.net/carsislandcontainer/"
