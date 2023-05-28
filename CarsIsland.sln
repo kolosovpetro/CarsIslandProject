@@ -110,6 +110,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kubernetes", "kubernetes", "{734D822C-9340-4803-819A-128DA84C5CB1}"
 	ProjectSection(SolutionItems) = preProject
 		kubernetes\README.md = kubernetes\README.md
+		kubernetes\api-deployment.azure.yaml = kubernetes\api-deployment.azure.yaml
+		kubernetes\cars-configmap.yaml = kubernetes\cars-configmap.yaml
+		kubernetes\create-aks-cluster.ps1 = kubernetes\create-aks-cluster.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "terraform", "terraform", "{50DCF6E6-A8E5-4221-B09C-CE83BB3B6941}"
