@@ -1,0 +1,88 @@
+﻿name: Docker Build Push
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - develop
+
+  pull_request:
+    branches:
+      - master
+      - main
+      - develop
+
+  workflow_dispatch:
+
+#  schedule:
+#    - cron: '0 0 * * 0'
+
+jobs:
+  build-test-drop-artifacts:
+    name: Build Test & Drop artifacts
+    runs-on: ${{ matrix.environment }}
+    strategy:
+      matrix:
+        environment:
+          - ubuntu-latest
+    
+    env:
+      dockerRepository: 'cars-app'
+      dockerImage: 'carsapp'
+      dockerUser: 'petrokolosov'
+    
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.15
+        with:
+          versionSpec: '5.x'
+
+      - name: Determine Version
+        uses: gittools/actions/gitversion/execute@v0.9.15
+
+      - name: Docker Login
+        run: echo "$DOCKER_PASSWORD" | docker login docker.io -u "$DOCKER_USERNAME" --password-stdin
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_LOGIN }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Print SemVer
+        run: echo ${{ env.GITVERSION_SEMVER }}
+
+      - name: Docker Build
+        run: |
+          IMAGE_FULL_NAME="$USER/$REPOSITORY:$VERSION"
+          echo "Image full name: $IMAGE_FULL_NAME"
+          docker build -t "$IMAGE_FULL_NAME" .
+        env:
+          REPOSITORY: ${{ env.dockerRepository }}
+          VERSION: ${{ env.GITVERSION_SEMVER }}
+          USER: ${{ env.dockerUser }}
+
+      - name: List Images
+        run: docker images
+
+      - name: Docker Push
+        run: |
+          IMAGE_FULL_NAME="$USER/$REPOSITORY:$VERSION"
+          echo "Image full name: $IMAGE_FULL_NAME"
+          docker push "$IMAGE_FULL_NAME"
+        env:
+          REPOSITORY: ${{ env.dockerRepository }}
+          VERSION: ${{ env.GITVERSION_SEMVER }}
+          USER: ${{ env.dockerUser }}
+
+      - name: Write Version
+        run: echo ${{ env.GITVERSION_SEMVER }} > version.txt
+
+      - name: Drop Artifact Version
+        uses: actions/upload-artifact@v3
+        with:
+          name: version
+          path: version.txt

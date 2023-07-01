@@ -85,6 +85,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build-webapi.yml = .github\workflows\build-webapi.yml
 		.github\workflows\build-webapp.yml = .github\workflows\build-webapp.yml
+		.github\workflows\docker-build-push-webapi.yml = .github\workflows\docker-build-push-webapi.yml
+		.github\workflows\docker-build-push-webapp.yml = .github\workflows\docker-build-push-webapp.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{57ACAACE-6979-4B78-A1F0-38F14B2EA3D3}"
