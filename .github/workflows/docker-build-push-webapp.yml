@@ -31,6 +31,7 @@ jobs:
       dockerRepository: 'cars-app'
       dockerImage: 'carsapp'
       dockerUser: 'petrokolosov'
+      workDir: './src/cars-island-web-app'
     
     steps:
       - name: Fetch Sources
@@ -56,6 +57,7 @@ jobs:
         run: echo ${{ env.GITVERSION_SEMVER }}
 
       - name: Docker Build
+        working-directory: ${{ env.workDir }}
         run: |
           IMAGE_FULL_NAME="$USER/$REPOSITORY:$VERSION"
           echo "Image full name: $IMAGE_FULL_NAME"
@@ -69,6 +71,7 @@ jobs:
         run: docker images
 
       - name: Docker Push
+        working-directory: ${{ env.workDir }}
         run: |
           IMAGE_FULL_NAME="$USER/$REPOSITORY:$VERSION"
           echo "Image full name: $IMAGE_FULL_NAME"
