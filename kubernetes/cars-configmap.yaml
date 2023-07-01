@@ -11,4 +11,4 @@ data:
   BlobContainerName: "carsislandcontainer"
   BlobConnectionString: "DefaultEndpointsProtocol=https;AccountName=stcarsislandc01;AccountKey=/Q2eIKQyOkNOHeu/slPTs4iMEKjeyefLHEmLXx0cq1XR1I5NOIzLlW2z3waKVZLo0IJB2wfwAsU4+AStvPTTxQ==;EndpointSuffix=core.windows.net"
   BlobServerAddress: "https://stcarsislandc01.blob.core.windows.net/carsislandcontainer/"
-  ApiAddress: "http://20.93.25.112"
+  ApiAddress: "http://cars-api-service:80"
