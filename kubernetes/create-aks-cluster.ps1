@@ -29,11 +29,14 @@ kubectl create configmap "cars-configmap" --from-file=cars-configmap.yaml
 kubectl get configmaps
 kubectl describe configmap "cars-configmap"
 kubectl describe service "cars-api-service"
+kubectl describe service "cars-app-service"
 kubectl get pod -o wide
 kubectl apply -f ./api-deployment.azure.yaml
+kubectl apply -f ./app-deployment.azure.yaml
 kubectl get pods
 kubectl delete -f cars-configmap.yaml -n default
 kubectl delete -f ./api-deployment.azure.yaml -n default
+kubectl delete -f ./app-deployment.azure.yaml -n default
 kubectl create -f ./cars-configmap.yaml
 kubectl create -f ./api-deployment.azure.yaml
 kubectl logs cars-api-deployment

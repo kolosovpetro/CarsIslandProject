@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cars-app-deployment
+spec:
+  selector:
+    matchLabels:
+      app: cars-island-app
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: cars-island-app
+    spec:
+      containers:
+        - name: cars-app
+          image: acrcarsislandc01.azurecr.io/cars-island-web-app:cars-web-app-0.1.71
+          ports:
+            - containerPort: 80
+          env:
+            - name: ApiAddress
+              valueFrom:
+                configMapKeyRef:
+                  name: cars-configmap
+                  key: ApiAddress
+
+            - name: BlobServerAddress
+              valueFrom:
+                configMapKeyRef:
+                  name: cars-configmap
+                  key: BlobServerAddress
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cars-app-service
+spec:
+  selector:
+    app: cars-island-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer #NodePort
