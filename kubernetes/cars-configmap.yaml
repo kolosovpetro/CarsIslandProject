@@ -5,9 +5,9 @@ metadata:
   labels:
     app: cars-island
 data:
-  CosmosConnectionString: ""
-  BlobAccountName: "stcarsislandd01"
-  BlobKey: ""
+  CosmosConnectionString: "AccountEndpoint=https://carsislandcosmosc01.documents.azure.com:443/;AccountKey=DvhVLzkVZPCACqaVyEcWXhfl822HtHIVkmkjBVG6TEVhy3IKOkRSwkHXP58ZUfonMkbZgbSN3VcLACDbIHzP2w==;"
+  BlobAccountName: "stcarsislandc01"
+  BlobKey: "/Q2eIKQyOkNOHeu/slPTs4iMEKjeyefLHEmLXx0cq1XR1I5NOIzLlW2z3waKVZLo0IJB2wfwAsU4+AStvPTTxQ=="
   BlobContainerName: "carsislandcontainer"
-  BlobConnectionString: ""
-  BlobServiceAddress: "https://stcarsislandd01.blob.core.windows.net/carsislandcontainer/"
+  BlobConnectionString: "DefaultEndpointsProtocol=https;AccountName=stcarsislandc01;AccountKey=/Q2eIKQyOkNOHeu/slPTs4iMEKjeyefLHEmLXx0cq1XR1I5NOIzLlW2z3waKVZLo0IJB2wfwAsU4+AStvPTTxQ==;EndpointSuffix=core.windows.net"
+  BlobServiceAddress: "https://stcarsislandc01.blob.core.windows.net/carsislandcontainer/"

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: cars-api
-          image: acrcarsislandd01.azurecr.io/cars-island-web-api:cars-web-api-0.1.71
+          image: acrcarsislandc01.azurecr.io/cars-island-web-api:cars-web-api-0.1.71
           ports:
             - containerPort: 80
           env:
@@ -54,7 +54,7 @@ metadata:
   name: cars-api-service
 spec:
   selector:
-    app: cars-api
+    app: cars-island
   ports:
     - protocol: TCP
       port: 80

@@ -28,6 +28,8 @@ az aks browse --resource-group "cars-island-c01" --name "cars-aks-k8s-c01" --sub
 kubectl create configmap "cars-configmap" --from-file=cars-configmap.yaml
 kubectl get configmaps
 kubectl describe configmap "cars-configmap"
+kubectl describe service "cars-api-service"
+kubectl get pod -o wide
 kubectl apply -f ./api-deployment.azure.yaml
 kubectl get pods
 kubectl delete -f cars-configmap.yaml -n default
@@ -35,5 +37,9 @@ kubectl delete -f ./api-deployment.azure.yaml -n default
 kubectl create -f ./cars-configmap.yaml
 kubectl create -f ./api-deployment.azure.yaml
 kubectl logs cars-api-deployment
+
+## check endpoints
+kubectl get endpoints
+kubectl describe service "cars-api-service"
 
 curl -v http://20.191.53.75/api/Car/all
