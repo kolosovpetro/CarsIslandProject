@@ -1,0 +1,55 @@
+
+jobs:
+  - job: Build_Push_Docker_Image
+    displayName: "Build push docker image"
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
+      - checkout: self
+        fetchDepth: 0
+            
+      - task: AzureKeyVault@2
+        inputs:
+          azureSubscription: 'CarsIslandACR_SP_Service_connection'
+          KeyVaultName: '$(KeyVaultName)' # inside variables group
+          SecretsFilter: "*"
+          RunAsPreJob: false
+
+      - task: gitversion/setup@0
+        displayName: 'GitVersion Setup'
+        inputs:
+          versionSpec: '5.x'
+
+      - task: gitversion/execute@0
+        displayName: 'GitVersion Execute'
+
+      - bash: echo $Action$BuildVersion
+        displayName: 'Set Build Version'
+        env:
+          Action: '##vso[build.updatebuildnumber]'
+          BuildVersion: $(GitVersion.SemVer)
+
+      - bash: |
+          IMAGE_FULL_NAME="$ACR_URL/$ACR_REPOSITORY:$IMAGE-$VERSION"
+          echo "Image full name: $IMAGE_FULL_NAME"
+          docker build -t "$IMAGE_FULL_NAME" "$DOCKERFILE_PATH"
+        env:
+          ACR_URL: $(acrUrl)
+          ACR_REPOSITORY: $(acrAppRepository)
+          IMAGE: $(acrAppImage)
+          VERSION: $(GitVersion.SemVer)
+          DOCKERFILE_PATH: $(appDockerFilePath)
+        displayName: 'Build Docker Image'
+
+      - bash: docker images
+        displayName: 'List Docker Images'
+
+      - task: AzureCLI@2
+        displayName: 'Push image to ACR'
+        inputs:
+          azureSubscription: 'CarsIslandACR_SP_Service_connection'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            az acr login --name "$(acrName)"
+            docker image push -a "$(acrUrl)/$(acrAppRepository)"
