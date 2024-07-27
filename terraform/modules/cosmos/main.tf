@@ -15,7 +15,7 @@ resource "azurerm_cosmosdb_account" "public" {
   }
 
   geo_location {
-    location          = "eastus"
+    location          = "westeurope"
     failover_priority = 1
   }
 

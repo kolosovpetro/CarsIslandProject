@@ -16,7 +16,7 @@ module "acr" {
 module "key_vault" {
   source                               = "./modules/key-vault"
   key_vault_location                   = azurerm_resource_group.public.location
-  key_vault_name                       = "${var.key_vault_name}${var.prefix}"
+  key_vault_name                       = "${var.key_vault_name}-${var.prefix}"
   key_vault_object_id                  = data.azurerm_client_config.current.object_id
   key_vault_resource_group_name        = azurerm_resource_group.public.name
   key_vault_sku_name                   = var.key_vault_sku_name
@@ -57,14 +57,9 @@ module "keyvault-secrets" {
   acr_url                   = module.acr.acr_url
 
   depends_on = [
-    module.cosmos.cosmos_connection_string,
-    module.key_vault.key_vault_id,
-    module.storage.storage_account_name,
-    module.storage.storage_connection_string,
-    module.storage.storage_container_name,
-    module.storage.storage_primary_key,
-    module.storage.storage_access_url,
-    module.acr.acr_name,
-    module.acr.acr_url
+    module.cosmos,
+    module.key_vault,
+    module.storage,
+    module.acr
   ]
 }
